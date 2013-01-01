@@ -13,8 +13,9 @@ public class Main {
 		loadAgents(1,1, "agent_timer", 	"openjade.task.agent.TimerAgent", 		"Freemarket-Container", "123456", null, null);
 		loadAgents(1,1, "agent_monitor", 	"openjade.task.agent.MonitorAgent", 		"Freemarket-Container", "123456", null, null);
 		
-		loadAgents(1,1, "agent", "openjade.task.agent.TaskAgent", 			"Agents-Container", 	"123456", "openjade.trust.DirectModel", "openjade.task.ability.GodAbility");
-		loadAgents(2,2, "agent", "openjade.task.agent.TaskAgent", 			"Agents-Container", 	"123456", "openjade.trust.IndirectModel", "openjade.task.ability.BadAbility");
+		loadAgents(1,2, "agent", "openjade.task.agent.TaskAgent", 			"Agents-Container", 	"123456", "openjade.trust.DirectModel", "openjade.task.ability.GodAbility");
+		loadAgents(3,4, "agent", "openjade.task.agent.TaskAgent", 			"Agents-Container", 	"123456", "openjade.trust.IndirectModel", "openjade.task.ability.BadAbility");
+		loadAgents(5,6, "agent", "openjade.task.agent.TaskAgent", 			"Agents-Container", 	"123456", "openjade.trust.CertificateModel", "openjade.task.ability.BadAbility");
 	}
 
 	private static void loadAgents(int begin, int end, String _nickName, String className, String container, String pass, String _trustModel, String _ability) {
