@@ -123,7 +123,7 @@ public class TaskAgent extends OpenAgent {
 			Task task = new Task();
 			task.setCompleted(0);
 			task.setPoints(100);
-			task.setStatus("new");
+			task.setStatus("NEW");
 			task.setTaskSender(getAID());
 			delegate.addTask(task);
 		}
