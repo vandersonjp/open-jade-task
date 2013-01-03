@@ -9,7 +9,7 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import openjade.core.behaviours.BehaviourException;
 import openjade.task.agent.TimerAgent;
-import openjade.task.agent.ontology.FreemarketOntology;
+import openjade.task.agent.ontology.TaskOntology;
 import openjade.task.agent.ontology.TimerAction;
 import openjade.task.config.Config;
 
@@ -24,7 +24,6 @@ public class TimerBehaviour extends CyclicBehaviour {
 	private long sleep;
 
 	private TimerAgent myAgent;
-	
 
 	public TimerBehaviour(Agent a, long sleep) {
 		super(a);
@@ -36,7 +35,7 @@ public class TimerBehaviour extends CyclicBehaviour {
 		long t0 = System.currentTimeMillis();
 		myAgent.addClick();
 		log.debug("click: " + myAgent.getTime());
-		ACLMessage reply = new ACLMessage(ACLMessage.INFORM);
+		ACLMessage message = new ACLMessage(ACLMessage.INFORM);
 		String[] services = { Config.MONITOR, Config.WORKER };
 		try {
 			for (String service : services) {
@@ -46,17 +45,17 @@ public class TimerBehaviour extends CyclicBehaviour {
 				dfd.addServices(sd);
 				DFAgentDescription[] results = DFService.search(myAgent, dfd);
 				for (DFAgentDescription result : results) {
-					reply.addReceiver(result.getName());
+					message.addReceiver(result.getName());
 				}
 			}
 		} catch (FIPAException e) {
 			throw new BehaviourException(e.getMessage(), e);
 		}
-		reply.setSender(myAgent.getAID());
-		TimerAction change = new TimerAction();
-		change.setTime(myAgent.getTime());
-		myAgent.fillContent(reply, change, myAgent.getCodec(), FreemarketOntology.getInstance());
-		myAgent.signerAndSend(reply);
+		message.setSender(myAgent.getAID());
+		TimerAction action = new TimerAction();
+		action.setTime(myAgent.getTime());
+		myAgent.fillContent(message, action, myAgent.getCodec(), TaskOntology.getInstance());
+		myAgent.signerAndSend(message);
 		try {
 			long dt = sleep - (System.currentTimeMillis() - t0);
 			if (dt > 0) {

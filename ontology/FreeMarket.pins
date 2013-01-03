@@ -1,4 +1,4 @@
-; Thu Dec 27 17:27:33 BRT 2012
+; Thu Jan 03 16:25:08 BRT 2013
 ; 
 ;+ (version "3.2.1")
 ;+ (build "Build 365")
@@ -9,8 +9,8 @@
 
 ([project+annotation] of  %3APROJECT-ANNOTATION
 
-	(%3ALOCATION "/home/vanderson/devvander/puc/workspace/open-jade-freemarket/src/main/java")
-	(%3AONTOLOGYNAME "Freemarket")
+	(%3ALOCATION "/home/vanderson/devvander/puc/workspace/open-jade-task/src/main/java")
+	(%3AONTOLOGYNAME "Task")
 	(%3APACKAGE "openjade.freemarket.agent.ontology")
 	(%3ASUPPORT "j2se"))
 

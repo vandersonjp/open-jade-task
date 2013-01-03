@@ -1,24 +1,29 @@
 package openjade.task.agent;
 
+import jade.content.AgentAction;
 import jade.content.ContentElement;
 import jade.lang.acl.ACLMessage;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.Hashtable;
+import java.util.List;
 
 import openjade.core.OpenAgent;
 import openjade.core.annotation.ReceiveMatchMessage;
 import openjade.core.behaviours.ReceiveOntologyMessageBehaviour;
 import openjade.core.behaviours.RegisterServiceBehaviour;
-import openjade.task.ability.Ability;
-import openjade.task.ability.AbilityFactory;
 import openjade.task.agent.core.SatisfactionCache;
 import openjade.task.agent.ontology.DelegateAction;
-import openjade.task.agent.ontology.FreemarketOntology;
 import openjade.task.agent.ontology.SatisfactionAction;
 import openjade.task.agent.ontology.Task;
+import openjade.task.agent.ontology.TaskOntology;
 import openjade.task.agent.ontology.TimerAction;
-import openjade.task.behaviour.DelegateBehaviour;
+import openjade.task.behaviour.TaskDelegateBehaviour;
+import openjade.task.behaviour.TaskResultBehaviour;
+import openjade.task.behaviour.ability.Ability;
+import openjade.task.behaviour.ability.AbilityFactory;
 import openjade.task.config.Config;
 import openjade.trust.TrustModel;
 import openjade.trust.TrustModelFactory;
@@ -41,55 +46,82 @@ public class TaskAgent extends OpenAgent {
 
 	private SatisfactionCache cache;
 
-	private DelegateBehaviour delegate;
-	
 	private Ability ability;
 
+	private Hashtable<String, List<Task>> tasks = new Hashtable<String, List<Task>>();
+
 	protected void setup() {
+		tasks.put(Config.TASK_TO_DELEGATE, new ArrayList<Task>());
+		tasks.put(Config.TASK_TO_PROCESS, new ArrayList<Task>());
+		tasks.put(Config.TASK_TO_COMPLETED, new ArrayList<Task>());
+
 		keystore = (String) getArguments()[0];
 		keystorePassword = (String) getArguments()[1];
 		moveContainer((String) getArguments()[2]);
 		if (getArguments().length == 5) {
 			trustModel = TrustModelFactory.create((String) getArguments()[3]);
-			ability = AbilityFactory.create((String) getArguments()[4]);
+			ability = AbilityFactory.create((String) getArguments()[4], this);
+			addBehaviour(ability);
 		}
 		log.debug("setup: " + getAID().getLocalName());
 		cache = new SatisfactionCache(1, 3);
-		delegate = new DelegateBehaviour(this);
-		addBehaviour(new ReceiveOntologyMessageBehaviour(this));
 		addBehaviour(new RegisterServiceBehaviour(this, Config.WORKER));
-		addBehaviour(delegate);
+		addBehaviour(new ReceiveOntologyMessageBehaviour(this));
+		addBehaviour(new TaskDelegateBehaviour(this));
+		addBehaviour(new TaskResultBehaviour(this));
 	}
 
-	@ReceiveMatchMessage(action = TimerAction.class, ontology = FreemarketOntology.class)
+	@ReceiveMatchMessage(action = TimerAction.class, ontology = TaskOntology.class)
 	public void receiveTimeAction(ACLMessage message, ContentElement ce) {
-		TimerAction timeAction = (TimerAction) ce;
-		setTime(timeAction.getTime());
+		time = ((TimerAction) ce).getTime();
+		cache.setCurrentTime(time);
+		createTasks(5);
 		sendSatisfaction();
 	}
 
-	@ReceiveMatchMessage(action = DelegateAction.class, performative = { ACLMessage.REQUEST }, ontology = FreemarketOntology.class)
+	@ReceiveMatchMessage(action = DelegateAction.class, performative = { ACLMessage.REQUEST }, ontology = TaskOntology.class)
 	public void receiveTaskRequest(ACLMessage message, ContentElement ce) {
-		DelegateAction da = (DelegateAction) ce;
-		da.setFinishTime(GregorianCalendar.getInstance().getTimeInMillis());
-		
-		ability.setTask(da.getTask());
-		
-		ACLMessage msg = new ACLMessage(ACLMessage.CONFIRM);
-		msg.setSender(getAID());
-		msg.addReceiver(da.getTask().getTaskSender());
-		fillContent(msg, da, getCodec(), FreemarketOntology.getInstance());
-		signerAndSend(msg);
+		log.debug("receiveTaskRequest");
+		DelegateAction action = (DelegateAction) ce;
+		if (ability.addTask(action.getTask())) {
+			tasks.get(Config.TASK_TO_PROCESS).add(action.getTask());
+		}else{
+			ACLMessage msg = new ACLMessage(ACLMessage.REFUSE);
+			msg.setSender(getAID());
+			msg.addReceiver(action.getTask().getTaskSender());
+			fillContent(msg, action, getCodec(), TaskOntology.getInstance());
+			signerAndSend(msg);
+		}
 	}
 
-	@ReceiveMatchMessage(action = DelegateAction.class, performative = { ACLMessage.CONFIRM }, ontology = FreemarketOntology.class)
+	@ReceiveMatchMessage(action = DelegateAction.class, performative = { ACLMessage.CONFIRM }, ontology = TaskOntology.class)
 	public void receiveTaskDone(ACLMessage message, ContentElement ce) {
 		DelegateAction da = (DelegateAction) ce;
 		SatisfactionAction sa = new SatisfactionAction();
-		sa.setSatisfaction((da.getTask().getCompleted() + da.getTask().getPoints())/2);
+		sa.setSatisfaction((da.getTask().getCompleted() + da.getTask().getPoints()) / 2);
 		sa.setTrustmodel(trustModel.getName());
 		sa.setTime(time);
 		cache.add(sa);
+	}
+
+	@ReceiveMatchMessage(action = DelegateAction.class, performative = { ACLMessage.REFUSE }, ontology = TaskOntology.class)
+	public void receiveTaskRefuse(ACLMessage message, ContentElement ce) {
+		System.out.println("Refuse");
+		SatisfactionAction sa = new SatisfactionAction();
+		sa.setSatisfaction(0);
+		sa.setTrustmodel(trustModel.getName());
+		sa.setTime(time);
+		cache.add(sa);
+	}
+
+	public void sendConfirmTask(DelegateAction da) {
+		// log.debug("sendConfirmTask");
+		da.getTask().setFinishTime(GregorianCalendar.getInstance().getTimeInMillis());
+		ACLMessage msg = new ACLMessage(ACLMessage.CONFIRM);
+		msg.setSender(getAID());
+		msg.addReceiver(da.getTask().getTaskSender());
+		fillContent(msg, da, getCodec(), TaskOntology.getInstance());
+		signerAndSend(msg);
 	}
 
 	private void sendSatisfaction() {
@@ -103,8 +135,19 @@ public class TaskAgent extends OpenAgent {
 			ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
 			msg.setSender(getAID());
 			msg.addReceiver(getAIDByService(Config.MONITOR).get(0));
-			fillContent(msg, sa, getCodec(), FreemarketOntology.getInstance());
+			fillContent(msg, sa, getCodec(), TaskOntology.getInstance());
 			signerAndSend(msg);
+		}
+	}
+
+	private void createTasks(int count) {
+		for (int i = 0; i < count; i++) {
+			Task task = new Task();
+			task.setCompleted(0);
+			task.setPoints(100);
+			task.setStatus(Config.STATUS_NEW);
+			task.setTaskSender(getAID());
+			tasks.get(Config.TASK_TO_DELEGATE).add(task);
 		}
 	}
 
@@ -118,21 +161,13 @@ public class TaskAgent extends OpenAgent {
 		return keystorePassword;
 	}
 
-	public void createTask() {
-		for (int i = 0; i < 5; i++) {
-			Task task = new Task();
-			task.setCompleted(0);
-			task.setPoints(100);
-			task.setStatus("NEW");
-			task.setTaskSender(getAID());
-			delegate.addTask(task);
-		}
+	public void signerAndSend(ACLMessage _message, AgentAction _action) {
+		super.fillContent(_message, _action, getCodec(), TaskOntology.getInstance());
+		super.signerAndSend(_message);
 	}
 
-	public void setTime(int _time) {
-		this.time = _time;
-		cache.setCurrentTime(_time);
-		createTask();
+	public Hashtable<String, List<Task>> getTasks() {
+		return tasks;
 	}
 
 }

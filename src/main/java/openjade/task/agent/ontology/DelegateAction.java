@@ -8,7 +8,7 @@ import jade.core.*;
 /**
 * Protege name: DelegateAction
 * @author ontology bean generator
-* @version 2012/12/27, 17:27:37
+* @version 2013/01/3, 16:25:09
 */
 public class DelegateAction implements AgentAction {
 
@@ -21,28 +21,6 @@ public class DelegateAction implements AgentAction {
    }
    public Task getTask() {
      return this.task;
-   }
-
-   /**
-* Protege name: finishTime
-   */
-   private float finishTime;
-   public void setFinishTime(float value) { 
-    this.finishTime=value;
-   }
-   public float getFinishTime() {
-     return this.finishTime;
-   }
-
-   /**
-* Protege name: startTime
-   */
-   private float startTime;
-   public void setStartTime(float value) { 
-    this.startTime=value;
-   }
-   public float getStartTime() {
-     return this.startTime;
    }
 
 }

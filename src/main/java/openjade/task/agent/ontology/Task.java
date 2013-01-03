@@ -8,20 +8,9 @@ import jade.core.*;
 /**
 * Protege name: Task
 * @author ontology bean generator
-* @version 2012/12/27, 17:27:37
+* @version 2013/01/3, 16:25:09
 */
 public class Task implements Concept {
-
-   /**
-* Protege name: status
-   */
-   private String status;
-   public void setStatus(String value) { 
-    this.status=value;
-   }
-   public String getStatus() {
-     return this.status;
-   }
 
    /**
 * Protege name: taskSender
@@ -57,6 +46,28 @@ public class Task implements Concept {
    }
 
    /**
+* Protege name: finishTime
+   */
+   private float finishTime;
+   public void setFinishTime(float value) { 
+    this.finishTime=value;
+   }
+   public float getFinishTime() {
+     return this.finishTime;
+   }
+
+   /**
+* Protege name: status
+   */
+   private String status;
+   public void setStatus(String value) { 
+    this.status=value;
+   }
+   public String getStatus() {
+     return this.status;
+   }
+
+   /**
 * Protege name: points
    */
    private int points;
@@ -65,6 +76,17 @@ public class Task implements Concept {
    }
    public int getPoints() {
      return this.points;
+   }
+
+   /**
+* Protege name: startTime
+   */
+   private float startTime;
+   public void setStartTime(float value) { 
+    this.startTime=value;
+   }
+   public float getStartTime() {
+     return this.startTime;
    }
 
 }

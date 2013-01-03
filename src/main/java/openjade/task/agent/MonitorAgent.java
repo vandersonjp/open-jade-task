@@ -12,8 +12,8 @@ import openjade.core.annotation.ReceiveMatchMessage;
 import openjade.core.behaviours.ReceiveOntologyMessageBehaviour;
 import openjade.core.behaviours.RegisterServiceBehaviour;
 import openjade.task.agent.core.SatisfactionCache;
-import openjade.task.agent.ontology.FreemarketOntology;
 import openjade.task.agent.ontology.SatisfactionAction;
+import openjade.task.agent.ontology.TaskOntology;
 import openjade.task.agent.ontology.TimerAction;
 import openjade.task.config.Config;
 import openjade.task.gui.MonitorChart;
@@ -43,7 +43,7 @@ public class MonitorAgent extends OpenAgent {
 		addBehaviour(new RegisterServiceBehaviour(this, Config.MONITOR));
 	}
 
-	@ReceiveMatchMessage(ontology = FreemarketOntology.class, action = TimerAction.class)
+	@ReceiveMatchMessage(ontology = TaskOntology.class, action = TimerAction.class)
 	public void receiveTimeAction(ACLMessage message, ContentElement ce) {
 		TimerAction ta = (TimerAction) ce;
 		cache.setCurrentTime(ta.getTime());
@@ -59,7 +59,7 @@ public class MonitorAgent extends OpenAgent {
 		}
 	}
 
-	@ReceiveMatchMessage(ontology = FreemarketOntology.class, action = SatisfactionAction.class)
+	@ReceiveMatchMessage(ontology = TaskOntology.class, action = SatisfactionAction.class)
 	public void receiveTaskDone(ACLMessage message, ContentElement ce) {
 		SatisfactionAction sa = (SatisfactionAction) ce;
 		cache.add(sa);
@@ -77,6 +77,6 @@ public class MonitorAgent extends OpenAgent {
 	}
 	
 	private MonitorChart getMonitorChart() {
-		return MonitorChart.getInstance("Open Jade Task Monitor", 100D, 180D);
+		return MonitorChart.getInstance("Open Jade Monitor", 100D, 180D);
 	}
 }

@@ -1,4 +1,4 @@
-; Thu Dec 27 17:27:33 BRT 2012
+; Thu Jan 03 16:25:08 BRT 2013
 ; 
 ;+ (version "3.2.1")
 ;+ (build "Build 365")
@@ -19,7 +19,7 @@
 
 ([BROWSER_SLOT_NAMES] of  Property_List
 
-	(properties [FreeMarket_ProjectKB_Instance_10151]))
+	(properties [FreeMarket_ProjectKB_Instance_10150]))
 
 ([CLSES_TAB] of  Widget
 
@@ -92,7 +92,7 @@
 ([FreeMarket_ProjectKB_Instance_10147] of  Property_List
 )
 
-([FreeMarket_ProjectKB_Instance_10151] of  String
+([FreeMarket_ProjectKB_Instance_10150] of  String
 
 	(name ":INSTANCE-ANNOTATION")
 	(string_value "%3AANNOTATION-TEXT"))
