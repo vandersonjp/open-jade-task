@@ -63,7 +63,7 @@ public class TaskAgent extends OpenAgent {
 			addBehaviour(ability);
 		}
 		log.debug("setup: " + getAID().getLocalName());
-		cache = new SatisfactionCache(1, 3);
+		cache = new SatisfactionCache(1, 10);
 		addBehaviour(new RegisterServiceBehaviour(this, Constants.SERVICE_WORKER));
 		addBehaviour(new ReceiveOntologyMessageBehaviour(this));
 		addBehaviour(new TaskDelegateBehaviour(this));
@@ -80,11 +80,9 @@ public class TaskAgent extends OpenAgent {
 
 	@ReceiveMatchMessage(action = DelegateAction.class, performative = { ACLMessage.REQUEST }, ontology = TaskOntology.class)
 	public void receiveTaskRequest(ACLMessage message, ContentElement ce) {
-//		log.debug("receiveTaskRequest");
 		DelegateAction action = (DelegateAction) ce;
 		if (ability.addTask(action.getTask())) {
 			tasks.get(Constants.TASK_TO_PROCESS).add(action.getTask());
-			log.debug("......... to_process ........ " + tasks.get(Constants.TASK_TO_PROCESS).size());
 		}else{
 			ACLMessage msg = new ACLMessage(ACLMessage.REFUSE);
 			msg.setSender(getAID());
@@ -113,7 +111,7 @@ public class TaskAgent extends OpenAgent {
 		sa.setTime(time);
 		cache.add(sa);
 	}
-		// log.debug("sendConfirmTask");
+
 	public void sendConfirmTask(DelegateAction da) {
 		ACLMessage msg = new ACLMessage(ACLMessage.CONFIRM);
 		msg.setSender(getAID());

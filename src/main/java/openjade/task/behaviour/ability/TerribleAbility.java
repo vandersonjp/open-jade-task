@@ -8,7 +8,7 @@ public class TerribleAbility extends Ability {
 	private static final long serialVersionUID = 1L;
 
 	public TerribleAbility(Agent agent) {
-		super(agent, 200);
+		super(agent, 1000);
 	}
 
 	public long capacity() {

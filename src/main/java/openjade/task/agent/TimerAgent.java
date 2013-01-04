@@ -17,8 +17,6 @@ public class TimerAgent extends OpenAgent {
 
 	private String keystorePassword;
 	
-	private int timer = 0;
-
 	protected void setup() {
 		keystore = (String) getArguments()[0];
 		keystorePassword = (String) getArguments()[1];
@@ -36,13 +34,4 @@ public class TimerAgent extends OpenAgent {
 	protected String getKeystorePassword() {
 		return keystorePassword;
 	}
-
-	public void addClick() {
-		timer++;		
-	}
-	
-	public int getTime() {
-		return timer;		
-	}
-
 }
