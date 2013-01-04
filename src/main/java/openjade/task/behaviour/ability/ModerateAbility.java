@@ -8,15 +8,11 @@ public class ModerateAbility extends Ability {
 	private static final long serialVersionUID = 1L;
 
 	public ModerateAbility(Agent agent) {
-		super(agent);
+		super(agent, 500);
 	}
 
 	public long capacity() {
 		return 300;
-	}
-
-	public long speed() {
-		return 500;
 	}
 
 	@Override

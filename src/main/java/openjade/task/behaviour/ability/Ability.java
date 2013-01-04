@@ -1,18 +1,17 @@
 package openjade.task.behaviour.ability;
 
 import jade.core.Agent;
-import jade.core.behaviours.CyclicBehaviour;
 
-import java.util.GregorianCalendar;
 import java.util.List;
 
+import openjade.core.behaviours.CyclicTimerBehaviour;
 import openjade.task.agent.TaskAgent;
 import openjade.task.agent.ontology.Task;
 import openjade.task.config.Constants;
 
 import org.apache.log4j.Logger;
 
-public abstract class Ability extends CyclicBehaviour {
+public abstract class Ability extends CyclicTimerBehaviour {
 
 	private static final long serialVersionUID = 1L;
 
@@ -22,12 +21,7 @@ public abstract class Ability extends CyclicBehaviour {
 
 	private TaskAgent myAgent;
 
-	private long time1;
-	private long time2;
-
 	public abstract long capacity();
-
-	abstract long speed();
 
 	abstract float getCompleted();
 
@@ -35,11 +29,9 @@ public abstract class Ability extends CyclicBehaviour {
 
 	abstract String getStatus();
 
-	public Ability(Agent agent) {
-		super(agent);
+	public Ability(Agent agent, long timer) {
+		super(agent, timer);
 		myAgent = (TaskAgent) agent;
-		time1 = GregorianCalendar.getInstance().getTimeInMillis();
-		time2 = GregorianCalendar.getInstance().getTimeInMillis();
 	}
 
 	public void setAgent(TaskAgent _agent) {
@@ -58,20 +50,16 @@ public abstract class Ability extends CyclicBehaviour {
 	}
 
 	@Override
-	public void action() {
-		if (time2 - time1 > speed()) {
-			time1 = time2;
-			List<Task> tasks = myAgent.getTasks().get(Constants.TASK_TO_PROCESS);
-			if (!tasks.isEmpty()) {
-				Task task = tasks.remove(0);
-				task.setCompleted(getCompleted());
-				task.setStatus(getStatus());
-				task.setPoints(getPoints(task.getPoints()));
-				myAgent.getTasks().get(Constants.TASK_TO_COMPLETED).add(task);
-				capacity -= task.getPoints();
-				log.debug("......... backlog ........ " + myAgent.getTasks().get(Constants.TASK_TO_PROCESS).size());
-			}
+	public void run() {
+		List<Task> tasks = myAgent.getTasks().get(Constants.TASK_TO_PROCESS);
+		if (!tasks.isEmpty()) {
+			Task task = tasks.remove(0);
+			task.setCompleted(getCompleted());
+			task.setStatus(getStatus());
+			task.setPoints(getPoints(task.getPoints()));
+			myAgent.getTasks().get(Constants.TASK_TO_COMPLETED).add(task);
+			capacity -= task.getPoints();
+			log.debug("......... backlog ........ " + myAgent.getTasks().get(Constants.TASK_TO_PROCESS).size());
 		}
-		time2 = GregorianCalendar.getInstance().getTimeInMillis();
 	}
 }

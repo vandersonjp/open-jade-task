@@ -9,14 +9,10 @@ public class GodAbility extends Ability {
 	private static final long serialVersionUID = 1L;
 
 	public GodAbility(Agent agent) {
-		super(agent);
+		super(agent, 400);
 	}
 
 	public long capacity() {
-		return 400;
-	}
-
-	public long speed() {
 		return 400;
 	}
 

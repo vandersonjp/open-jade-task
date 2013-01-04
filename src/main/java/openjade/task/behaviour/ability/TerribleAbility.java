@@ -8,17 +8,12 @@ public class TerribleAbility extends Ability {
 	private static final long serialVersionUID = 1L;
 
 	public TerribleAbility(Agent agent) {
-		super(agent);
+		super(agent, 200);
 	}
 
 	public long capacity() {
 		return 500;
 	}
-
-	public long speed() {
-		return 500;
-	}
-
 
 	@Override
 	float getCompleted() {

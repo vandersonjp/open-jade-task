@@ -6,17 +6,13 @@ import openjade.task.config.Constants;
 public class ExcellentAbility extends Ability {
 
 	public ExcellentAbility(Agent agent) {
-		super(agent);
+		super(agent, 10);
 	}
 
 	private static final long serialVersionUID = 1L;
 
 	public long capacity() {
 		return 3000;
-	}
-
-	public long speed() {
-		return 1;
 	}
 
 	@Override
