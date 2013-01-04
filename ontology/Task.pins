@@ -1,0 +1,27 @@
+; Thu Jan 03 22:27:35 BRT 2013
+; 
+;+ (version "3.2.1")
+;+ (build "Build 365")
+
+([DelegateAction] of  %3AJADE-CLASS
+
+	(%3AJADE-IGNORE FALSE))
+
+([project+annotation] of  %3APROJECT-ANNOTATION
+
+	(%3ALOCATION "/home/vanderson/devvander/puc/workspace/open-jade-task/src/main/java")
+	(%3AONTOLOGYNAME "Task")
+	(%3APACKAGE "openjade.task.agent.ontology")
+	(%3ASUPPORT "j2se"))
+
+([SatisfactionAction] of  %3AJADE-CLASS
+
+	(%3AJADE-IGNORE FALSE))
+
+([Task] of  %3AJADE-CLASS
+
+	(%3AJADE-IGNORE FALSE))
+
+([TimerAction] of  %3AJADE-CLASS
+
+	(%3AJADE-IGNORE FALSE))
