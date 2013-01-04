@@ -5,13 +5,12 @@ import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import openjade.task.agent.TaskAgent;
 import openjade.task.agent.ontology.DelegateAction;
 import openjade.task.agent.ontology.Task;
-import openjade.task.config.Config;
+import openjade.task.config.Constants;
 
 import org.apache.log4j.Logger;
 
@@ -30,14 +29,14 @@ public class TaskDelegateBehaviour extends CyclicBehaviour {
 
 	@Override
 	public void action() {
-		List<Task> tasks = myAgent.getTasks().get(Config.TASK_TO_DELEGATE);
+		List<Task> tasks = myAgent.getTasks().get(Constants.TASK_TO_DELEGATE);
 		try {
 			if (!tasks.isEmpty()) {
-				List<AID> receives = myAgent.getAIDByService(Config.WORKER);
+				List<AID> receives = myAgent.getAIDByService(Constants.SERVICE_WORKER);
 				if (!receives.isEmpty()) {
 
 					Task task = tasks.remove(0);
-					task.setStartTime(GregorianCalendar.getInstance().getTimeInMillis());
+					log.debug("......... delegate ........ " + tasks.size());
 					AID receive = receives.get((int) (Math.random() * receives.size()));
 
 					DelegateAction action = new DelegateAction();

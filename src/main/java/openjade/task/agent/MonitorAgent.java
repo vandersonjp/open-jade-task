@@ -15,7 +15,7 @@ import openjade.task.agent.core.SatisfactionCache;
 import openjade.task.agent.ontology.SatisfactionAction;
 import openjade.task.agent.ontology.TaskOntology;
 import openjade.task.agent.ontology.TimerAction;
-import openjade.task.config.Config;
+import openjade.task.config.Constants;
 import openjade.task.gui.MonitorChart;
 
 import org.apache.log4j.Logger;
@@ -40,7 +40,7 @@ public class MonitorAgent extends OpenAgent {
 		cache = new SatisfactionCache(1, 3);
 		models = new HashSet<String>();
 		addBehaviour(new ReceiveOntologyMessageBehaviour(this));
-		addBehaviour(new RegisterServiceBehaviour(this, Config.MONITOR));
+		addBehaviour(new RegisterServiceBehaviour(this, Constants.SERVICE_MONITOR));
 	}
 
 	@ReceiveMatchMessage(ontology = TaskOntology.class, action = TimerAction.class)

@@ -9,7 +9,7 @@ import java.util.List;
 import openjade.task.agent.TaskAgent;
 import openjade.task.agent.ontology.DelegateAction;
 import openjade.task.agent.ontology.Task;
-import openjade.task.config.Config;
+import openjade.task.config.Constants;
 
 import org.apache.log4j.Logger;
 
@@ -28,8 +28,7 @@ public class TaskResultBehaviour extends CyclicBehaviour {
 
 	@Override
 	public void action() {
-		block(300);
-		List<Task> tasks = myAgent.getTasks().get(Config.TASK_TO_COMPLETED);
+		List<Task> tasks = myAgent.getTasks().get(Constants.TASK_TO_COMPLETED);
 		if (!tasks.isEmpty()){
 			Task task = tasks.remove(0);
 			

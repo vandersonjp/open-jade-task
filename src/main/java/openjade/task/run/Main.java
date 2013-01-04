@@ -13,7 +13,7 @@ public class Main {
 		loadAgents(1,1, "agent_timer", 		"openjade.task.agent.TimerAgent", 		"Freemarket-Container", "123456", null, null);
 		loadAgents(1,1, "agent_monitor", 	"openjade.task.agent.MonitorAgent", 	"Freemarket-Container", "123456", null, null);
 		
-		loadAgents(1,2, "agent", "openjade.task.agent.TaskAgent", 		"Agents-Container", 	"123456", "openjade.trust.DirectModel", 		"openjade.task.behaviour.ability.TerribleAbility");
+		loadAgents(1,5, "agent", "openjade.task.agent.TaskAgent", 		"Agents-Container", 	"123456", "openjade.trust.DirectModel", 		"openjade.task.behaviour.ability.TerribleAbility");
 //		loadAgents(3,3, "agent", "openjade.task.agent.TaskAgent", 		"Agents-Container", 	"123456", "openjade.trust.NothingModel", 		"openjade.task.behaviour.ability.TerribleAbility");
 		
 //		loadAgents(5,8, "agent", "openjade.task.agent.TaskAgent", 		"Agents-Container", 	"123456", "openjade.trust.IndirectModel", 		"openjade.task.behaviour.ability.BadAbility");

@@ -1,7 +1,7 @@
 package openjade.task.behaviour.ability;
 
 import jade.core.Agent;
-import openjade.task.config.Config;
+import openjade.task.config.Constants;
 
 public class TerribleAbility extends Ability {
 
@@ -12,12 +12,13 @@ public class TerribleAbility extends Ability {
 	}
 
 	public long capacity() {
-		return 1000;
+		return 500;
 	}
 
 	public long speed() {
-		return 5000;
+		return 500;
 	}
+
 
 	@Override
 	float getCompleted() {
@@ -36,7 +37,7 @@ public class TerribleAbility extends Ability {
 
 	@Override
 	String getStatus() {
-		return Config.STATUS_DONE;
+		return Constants.STATUS_DONE;
 	}
 
 }

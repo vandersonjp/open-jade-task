@@ -11,7 +11,7 @@ import openjade.core.behaviours.BehaviourException;
 import openjade.task.agent.TimerAgent;
 import openjade.task.agent.ontology.TaskOntology;
 import openjade.task.agent.ontology.TimerAction;
-import openjade.task.config.Config;
+import openjade.task.config.Constants;
 
 import org.apache.log4j.Logger;
 
@@ -34,9 +34,9 @@ public class TimerBehaviour extends CyclicBehaviour {
 	public void action() {
 		long t0 = System.currentTimeMillis();
 		myAgent.addClick();
-		log.debug("click: " + myAgent.getTime());
+		log.debug(".............. time [" + myAgent.getTime() + "] ..............");
 		ACLMessage message = new ACLMessage(ACLMessage.INFORM);
-		String[] services = { Config.MONITOR, Config.WORKER };
+		String[] services = { Constants.SERVICE_MONITOR, Constants.SERVICE_WORKER };
 		try {
 			for (String service : services) {
 				DFAgentDescription dfd = new DFAgentDescription();

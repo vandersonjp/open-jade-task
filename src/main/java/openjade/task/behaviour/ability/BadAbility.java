@@ -1,7 +1,7 @@
 package openjade.task.behaviour.ability;
 
 import jade.core.Agent;
-import openjade.task.config.Config;
+import openjade.task.config.Constants;
 
 public class BadAbility extends Ability {
 
@@ -33,6 +33,6 @@ public class BadAbility extends Ability {
 
 	@Override
 	String getStatus() {
-		return Config.STATUS_DONE;
+		return Constants.STATUS_DONE;
 	}
 }

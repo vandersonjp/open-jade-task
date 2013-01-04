@@ -6,7 +6,6 @@ import jade.lang.acl.ACLMessage;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -24,7 +23,7 @@ import openjade.task.behaviour.TaskDelegateBehaviour;
 import openjade.task.behaviour.TaskResultBehaviour;
 import openjade.task.behaviour.ability.Ability;
 import openjade.task.behaviour.ability.AbilityFactory;
-import openjade.task.config.Config;
+import openjade.task.config.Constants;
 import openjade.trust.TrustModel;
 import openjade.trust.TrustModelFactory;
 
@@ -51,9 +50,9 @@ public class TaskAgent extends OpenAgent {
 	private Hashtable<String, List<Task>> tasks = new Hashtable<String, List<Task>>();
 
 	protected void setup() {
-		tasks.put(Config.TASK_TO_DELEGATE, new ArrayList<Task>());
-		tasks.put(Config.TASK_TO_PROCESS, new ArrayList<Task>());
-		tasks.put(Config.TASK_TO_COMPLETED, new ArrayList<Task>());
+		tasks.put(Constants.TASK_TO_DELEGATE, new ArrayList<Task>());
+		tasks.put(Constants.TASK_TO_PROCESS, new ArrayList<Task>());
+		tasks.put(Constants.TASK_TO_COMPLETED, new ArrayList<Task>());
 
 		keystore = (String) getArguments()[0];
 		keystorePassword = (String) getArguments()[1];
@@ -65,7 +64,7 @@ public class TaskAgent extends OpenAgent {
 		}
 		log.debug("setup: " + getAID().getLocalName());
 		cache = new SatisfactionCache(1, 3);
-		addBehaviour(new RegisterServiceBehaviour(this, Config.WORKER));
+		addBehaviour(new RegisterServiceBehaviour(this, Constants.SERVICE_WORKER));
 		addBehaviour(new ReceiveOntologyMessageBehaviour(this));
 		addBehaviour(new TaskDelegateBehaviour(this));
 		addBehaviour(new TaskResultBehaviour(this));
@@ -81,10 +80,11 @@ public class TaskAgent extends OpenAgent {
 
 	@ReceiveMatchMessage(action = DelegateAction.class, performative = { ACLMessage.REQUEST }, ontology = TaskOntology.class)
 	public void receiveTaskRequest(ACLMessage message, ContentElement ce) {
-		log.debug("receiveTaskRequest");
+//		log.debug("receiveTaskRequest");
 		DelegateAction action = (DelegateAction) ce;
 		if (ability.addTask(action.getTask())) {
-			tasks.get(Config.TASK_TO_PROCESS).add(action.getTask());
+			tasks.get(Constants.TASK_TO_PROCESS).add(action.getTask());
+			log.debug("......... to_process ........ " + tasks.get(Constants.TASK_TO_PROCESS).size());
 		}else{
 			ACLMessage msg = new ACLMessage(ACLMessage.REFUSE);
 			msg.setSender(getAID());
@@ -113,10 +113,8 @@ public class TaskAgent extends OpenAgent {
 		sa.setTime(time);
 		cache.add(sa);
 	}
-
-	public void sendConfirmTask(DelegateAction da) {
 		// log.debug("sendConfirmTask");
-		da.getTask().setFinishTime(GregorianCalendar.getInstance().getTimeInMillis());
+	public void sendConfirmTask(DelegateAction da) {
 		ACLMessage msg = new ACLMessage(ACLMessage.CONFIRM);
 		msg.setSender(getAID());
 		msg.addReceiver(da.getTask().getTaskSender());
@@ -134,7 +132,7 @@ public class TaskAgent extends OpenAgent {
 
 			ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
 			msg.setSender(getAID());
-			msg.addReceiver(getAIDByService(Config.MONITOR).get(0));
+			msg.addReceiver(getAIDByService(Constants.SERVICE_MONITOR).get(0));
 			fillContent(msg, sa, getCodec(), TaskOntology.getInstance());
 			signerAndSend(msg);
 		}
@@ -145,9 +143,10 @@ public class TaskAgent extends OpenAgent {
 			Task task = new Task();
 			task.setCompleted(0);
 			task.setPoints(100);
-			task.setStatus(Config.STATUS_NEW);
+			task.setStatus(Constants.STATUS_NEW);
 			task.setTaskSender(getAID());
-			tasks.get(Config.TASK_TO_DELEGATE).add(task);
+			tasks.get(Constants.TASK_TO_DELEGATE).add(task);
+			log.debug("...... createTasks ....... total: " + tasks.get(Constants.TASK_TO_DELEGATE).size()  );
 		}
 	}
 
