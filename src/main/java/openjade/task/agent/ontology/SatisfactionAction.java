@@ -8,9 +8,20 @@ import jade.core.*;
 /**
 * Protege name: SatisfactionAction
 * @author ontology bean generator
-* @version 2013/01/3, 16:25:09
+* @version 2013/01/8, 11:00:44
 */
 public class SatisfactionAction implements AgentAction {
+
+   /**
+* Protege name: satisfaction
+   */
+   private float satisfaction;
+   public void setSatisfaction(float value) { 
+    this.satisfaction=value;
+   }
+   public float getSatisfaction() {
+     return this.satisfaction;
+   }
 
    /**
 * Protege name: trustmodel
@@ -32,17 +43,6 @@ public class SatisfactionAction implements AgentAction {
    }
    public int getTime() {
      return this.time;
-   }
-
-   /**
-* Protege name: satisfaction
-   */
-   private float satisfaction;
-   public void setSatisfaction(float value) { 
-    this.satisfaction=value;
-   }
-   public float getSatisfaction() {
-     return this.satisfaction;
    }
 
 }

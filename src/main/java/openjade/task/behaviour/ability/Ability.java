@@ -11,7 +11,7 @@ import openjade.task.config.Constants;
 
 import org.apache.log4j.Logger;
 
-public abstract class Ability extends CyclicTimerBehaviour {
+public class Ability extends CyclicTimerBehaviour {
 
 	private static final long serialVersionUID = 1L;
 
@@ -21,21 +21,43 @@ public abstract class Ability extends CyclicTimerBehaviour {
 
 	private TaskAgent myAgent;
 
-	public abstract long capacity();
+	private AbilityConfig abilityConfig;
 
-	abstract float getCompleted();
-
-	abstract int getPoints(int total);
-
-	abstract String getStatus();
-
-	public Ability(Agent agent, long timer) {
-		super(agent, timer);
+	public Ability(Agent agent, AbilityConfig abilityConfig) {
+		super(agent, abilityConfig.speed(), abilityConfig.speed());
 		myAgent = (TaskAgent) agent;
+		this.abilityConfig = abilityConfig;
 	}
 
 	public void setAgent(TaskAgent _agent) {
 		this.myAgent = _agent;
+	}
+
+	int getCompleted() {
+		int range = (int) (Math.random() * abilityConfig.completedRange());
+		if (Math.random() > 0.50000) {
+			return abilityConfig.completed() + range;
+		} else {
+			return abilityConfig.completed() - range;
+		}
+	}
+
+	public long capacity() {
+		return abilityConfig.capacity();
+	}
+
+	int getPoints(int _base) {
+		float points = _base * (abilityConfig.points()/100);
+		float range = _base *  (abilityConfig.pointsRange()/100);
+		if (Math.random() > 0.50000) {
+			return (int) (points + range);
+		} else {
+			return (int) (points - range);
+		}
+	}
+
+	String getStatus() {
+		return Constants.STATUS_DONE;
 	}
 
 	public boolean addTask(Task task) {
@@ -45,7 +67,6 @@ public abstract class Ability extends CyclicTimerBehaviour {
 			log.debug("addTask [NOK] capacity: " + capacity);
 			return false;
 		}
-		log.debug("addTask [OK] capacity: " + capacity);
 		return true;
 	}
 
@@ -54,12 +75,11 @@ public abstract class Ability extends CyclicTimerBehaviour {
 		List<Task> tasks = myAgent.getTasks().get(Constants.TASK_TO_PROCESS);
 		if (!tasks.isEmpty()) {
 			Task task = tasks.remove(0);
+			capacity -= task.getPoints();
 			task.setCompleted(getCompleted());
 			task.setStatus(getStatus());
 			task.setPoints(getPoints(task.getPoints()));
 			myAgent.getTasks().get(Constants.TASK_TO_COMPLETED).add(task);
-			capacity -= task.getPoints();
-			log.debug("......... backlog ........ " + myAgent.getTasks().get(Constants.TASK_TO_PROCESS).size());
 		}
 	}
 }

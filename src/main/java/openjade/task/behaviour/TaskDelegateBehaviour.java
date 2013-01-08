@@ -23,7 +23,7 @@ public class TaskDelegateBehaviour extends CyclicTimerBehaviour {
 	private TaskAgent myAgent;
 
 	public TaskDelegateBehaviour(Agent agent) {
-		super(agent, 100);
+		super(agent, 100, 100);
 		myAgent = (TaskAgent) agent;
 	}
 
@@ -36,7 +36,6 @@ public class TaskDelegateBehaviour extends CyclicTimerBehaviour {
 				if (!receives.isEmpty()) {
 
 					Task task = tasks.remove(0);
-					log.debug("......... delegate ........ " + tasks.size());
 					AID receive = receives.get((int) (Math.random() * receives.size()));
 
 					DelegateAction action = new DelegateAction();

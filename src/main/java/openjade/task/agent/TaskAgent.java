@@ -22,7 +22,7 @@ import openjade.task.agent.ontology.TimerAction;
 import openjade.task.behaviour.TaskDelegateBehaviour;
 import openjade.task.behaviour.TaskResultBehaviour;
 import openjade.task.behaviour.ability.Ability;
-import openjade.task.behaviour.ability.AbilityFactory;
+import openjade.task.behaviour.ability.AbilityConfig;
 import openjade.task.config.Constants;
 import openjade.trust.TrustModel;
 import openjade.trust.TrustModelFactory;
@@ -59,7 +59,7 @@ public class TaskAgent extends OpenAgent {
 		moveContainer((String) getArguments()[2]);
 		if (getArguments().length == 5) {
 			trustModel = TrustModelFactory.create((String) getArguments()[3]);
-			ability = AbilityFactory.create((String) getArguments()[4], this);
+			ability = createAbility((String) getArguments()[4], this);
 			addBehaviour(ability);
 		}
 		log.debug("setup: " + getAID().getLocalName());
@@ -68,6 +68,11 @@ public class TaskAgent extends OpenAgent {
 		addBehaviour(new ReceiveOntologyMessageBehaviour(this));
 		addBehaviour(new TaskDelegateBehaviour(this));
 		addBehaviour(new TaskResultBehaviour(this));
+	}
+
+	private Ability createAbility(String _abilityConfig, TaskAgent taskAgent) {
+		AbilityConfig ability = AbilityConfig.valueOf(_abilityConfig.toUpperCase());		
+		return new Ability(taskAgent, ability);
 	}
 
 	@ReceiveMatchMessage(action = TimerAction.class, ontology = TaskOntology.class)
@@ -96,7 +101,7 @@ public class TaskAgent extends OpenAgent {
 	public void receiveTaskDone(ACLMessage message, ContentElement ce) {
 		DelegateAction da = (DelegateAction) ce;
 		SatisfactionAction sa = new SatisfactionAction();
-		sa.setSatisfaction((da.getTask().getCompleted() + da.getTask().getPoints()) / 2);
+		sa.setSatisfaction( (da.getTask().getCompleted() + da.getTask().getPoints()) / 2 );
 		sa.setTrustmodel(trustModel.getName());
 		sa.setTime(time);
 		cache.add(sa);
@@ -104,7 +109,7 @@ public class TaskAgent extends OpenAgent {
 
 	@ReceiveMatchMessage(action = DelegateAction.class, performative = { ACLMessage.REFUSE }, ontology = TaskOntology.class)
 	public void receiveTaskRefuse(ACLMessage message, ContentElement ce) {
-		System.out.println("Refuse");
+		log.debug("REFUSE");
 		SatisfactionAction sa = new SatisfactionAction();
 		sa.setSatisfaction(0);
 		sa.setTrustmodel(trustModel.getName());
@@ -144,7 +149,7 @@ public class TaskAgent extends OpenAgent {
 			task.setStatus(Constants.STATUS_NEW);
 			task.setTaskSender(getAID());
 			tasks.get(Constants.TASK_TO_DELEGATE).add(task);
-			log.debug("...... createTasks ....... total: " + tasks.get(Constants.TASK_TO_DELEGATE).size()  );
+//			log.debug("...... createTasks ....... total: " + tasks.get(Constants.TASK_TO_DELEGATE).size()  );
 		}
 	}
 

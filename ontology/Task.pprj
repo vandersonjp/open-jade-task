@@ -1,4 +1,4 @@
-; Thu Jan 03 22:27:35 BRT 2013
+; Tue Jan 08 11:00:41 BRT 2013
 ; 
 ;+ (version "3.2.1")
 ;+ (build "Build 365")
@@ -19,7 +19,7 @@
 
 ([BROWSER_SLOT_NAMES] of  Property_List
 
-	(properties [Task_ProjectKB_Instance_10151]))
+	(properties [Task_ProjectKB_Instance_10148]))
 
 ([CLSES_TAB] of  Widget
 
@@ -38,40 +38,6 @@
 
 	(is_hidden FALSE)
 	(widget_class_name "edu.stanford.smi.protege.widget.FormsTab"))
-
-([FreeMarket_ProjectKB_Instance_10133] of  Boolean
-
-	(boolean_value FALSE)
-	(name "ButtonDisplayed-View References to Value"))
-
-([FreeMarket_ProjectKB_Instance_10134] of  Boolean
-
-	(boolean_value FALSE)
-	(name "ButtonDisplayed-Delete Instance"))
-
-([FreeMarket_ProjectKB_Instance_10135] of  Property_List
-)
-
-([FreeMarket_ProjectKB_Instance_10136] of  Property_List
-)
-
-([FreeMarket_ProjectKB_Instance_10137] of  Property_List
-)
-
-([FreeMarket_ProjectKB_Instance_10138] of  Property_List
-)
-
-([FreeMarket_ProjectKB_Instance_10139] of  Property_List
-)
-
-([FreeMarket_ProjectKB_Instance_10140] of  Property_List
-)
-
-([FreeMarket_ProjectKB_Instance_10141] of  Property_List
-)
-
-([FreeMarket_ProjectKB_Instance_10142] of  Property_List
-)
 
 ([FreeMarket_ProjectKB_Instance_133] of  Widget
 
@@ -953,29 +919,63 @@
 		[STANDARD_SLOT_TYPE_WIDGET]
 		[KB_122877_Instance_77]))
 
-([Task_ProjectKB_Instance_10145] of  Boolean
+([Task_ProjectKB_Instance_10143] of  Boolean
 
 	(boolean_value FALSE)
 	(name "ButtonDisplayed-View References to Value"))
 
-([Task_ProjectKB_Instance_10146] of  Boolean
+([Task_ProjectKB_Instance_10144] of  Boolean
 
 	(boolean_value FALSE)
 	(name "ButtonDisplayed-Delete Instance"))
 
+([Task_ProjectKB_Instance_10145] of  Property_List
+)
+
+([Task_ProjectKB_Instance_10146] of  Property_List
+)
+
 ([Task_ProjectKB_Instance_10147] of  Property_List
 )
 
-([Task_ProjectKB_Instance_10148] of  Property_List
-)
-
-([Task_ProjectKB_Instance_10149] of  Property_List
-)
-
-([Task_ProjectKB_Instance_10151] of  String
+([Task_ProjectKB_Instance_10148] of  String
 
 	(name ":INSTANCE-ANNOTATION")
 	(string_value "%3AANNOTATION-TEXT"))
+
+([Task_ProjectKB_Instance_133] of  Boolean
+
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-View References to Value"))
+
+([Task_ProjectKB_Instance_134] of  Boolean
+
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-Delete Instance"))
+
+([Task_ProjectKB_Instance_135] of  Property_List
+)
+
+([Task_ProjectKB_Instance_136] of  Property_List
+)
+
+([Task_ProjectKB_Instance_137] of  Property_List
+)
+
+([Task_ProjectKB_Instance_138] of  Property_List
+)
+
+([Task_ProjectKB_Instance_139] of  Property_List
+)
+
+([Task_ProjectKB_Instance_140] of  Property_List
+)
+
+([Task_ProjectKB_Instance_141] of  Property_List
+)
+
+([Task_ProjectKB_Instance_142] of  Property_List
+)
 
 ([VERTICAL_STRETCHER] of  String
 

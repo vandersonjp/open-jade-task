@@ -40,7 +40,6 @@ public class TaskResultBehaviour extends CyclicTimerBehaviour {
 			msg.addReceiver(task.getTaskSender());
 			
 			myAgent.signerAndSend(msg, action);
-			System.out.println("completed");
 		}
 	}
 }

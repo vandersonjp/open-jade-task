@@ -25,9 +25,9 @@ public class TimerBehaviour extends CyclicTimerBehaviour {
 	
 	private int time = 0;
 
-	public TimerBehaviour(Agent a, long sleep) {
-		super(a, sleep);
-		this.myAgent = (TimerAgent) a;
+	public TimerBehaviour(Agent _agent, long sleep) {
+		super(_agent, sleep, 0);
+		this.myAgent = (TimerAgent) _agent;
 	}
 
 	public void run() {
