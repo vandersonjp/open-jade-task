@@ -8,7 +8,7 @@ import jade.core.*;
 /**
 * Protege name: Task
 * @author ontology bean generator
-* @version 2013/01/8, 11:00:44
+* @version 2013/01/8, 14:07:34
 */
 public class Task implements Concept {
 
@@ -21,17 +21,6 @@ public class Task implements Concept {
    }
    public AID getTaskSender() {
      return this.taskSender;
-   }
-
-   /**
-* Protege name: completed
-   */
-   private int completed;
-   public void setCompleted(int value) { 
-    this.completed=value;
-   }
-   public int getCompleted() {
-     return this.completed;
    }
 
    /**
@@ -65,6 +54,17 @@ public class Task implements Concept {
    }
    public String getStatus() {
      return this.status;
+   }
+
+   /**
+* Protege name: completed
+   */
+   private int completed;
+   public void setCompleted(int value) { 
+    this.completed=value;
+   }
+   public int getCompleted() {
+     return this.completed;
    }
 
 }

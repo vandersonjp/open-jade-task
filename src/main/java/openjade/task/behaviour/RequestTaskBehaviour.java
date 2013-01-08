@@ -8,21 +8,21 @@ import java.util.List;
 
 import openjade.core.behaviours.CyclicTimerBehaviour;
 import openjade.task.agent.TaskAgent;
-import openjade.task.agent.ontology.DelegateAction;
+import openjade.task.agent.ontology.SendTask;
 import openjade.task.agent.ontology.Task;
 import openjade.task.config.Constants;
 
 import org.apache.log4j.Logger;
 
-public class TaskDelegateBehaviour extends CyclicTimerBehaviour {
+public class RequestTaskBehaviour extends CyclicTimerBehaviour {
 
 	private static final long serialVersionUID = 1L;
 
-	protected static Logger log = Logger.getLogger(TaskDelegateBehaviour.class);
+	protected static Logger log = Logger.getLogger(RequestTaskBehaviour.class);
 
 	private TaskAgent myAgent;
 
-	public TaskDelegateBehaviour(Agent agent) {
+	public RequestTaskBehaviour(Agent agent) {
 		super(agent, 100, 100);
 		myAgent = (TaskAgent) agent;
 	}
@@ -38,7 +38,7 @@ public class TaskDelegateBehaviour extends CyclicTimerBehaviour {
 					Task task = tasks.remove(0);
 					AID receive = receives.get((int) (Math.random() * receives.size()));
 
-					DelegateAction action = new DelegateAction();
+					SendTask action = new SendTask();
 					action.setTask(task);
 
 					ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);

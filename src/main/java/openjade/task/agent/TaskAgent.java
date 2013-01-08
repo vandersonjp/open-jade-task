@@ -2,6 +2,7 @@ package openjade.task.agent;
 
 import jade.content.AgentAction;
 import jade.content.ContentElement;
+import jade.core.AID;
 import jade.lang.acl.ACLMessage;
 
 import java.io.InputStream;
@@ -10,17 +11,19 @@ import java.util.Hashtable;
 import java.util.List;
 
 import openjade.core.OpenAgent;
+import openjade.core.RatingCache;
 import openjade.core.annotation.ReceiveMatchMessage;
 import openjade.core.behaviours.ReceiveOntologyMessageBehaviour;
 import openjade.core.behaviours.RegisterServiceBehaviour;
-import openjade.task.agent.core.SatisfactionCache;
-import openjade.task.agent.ontology.DelegateAction;
-import openjade.task.agent.ontology.SatisfactionAction;
+import openjade.ontology.OpenJadeOntology;
+import openjade.ontology.Rating;
+import openjade.ontology.SendIteration;
+import openjade.ontology.SendRating;
+import openjade.task.agent.ontology.SendTask;
 import openjade.task.agent.ontology.Task;
 import openjade.task.agent.ontology.TaskOntology;
-import openjade.task.agent.ontology.TimerAction;
-import openjade.task.behaviour.TaskDelegateBehaviour;
-import openjade.task.behaviour.TaskResultBehaviour;
+import openjade.task.behaviour.RequestTaskBehaviour;
+import openjade.task.behaviour.ResponseTaskBehaviour;
 import openjade.task.behaviour.ability.Ability;
 import openjade.task.behaviour.ability.AbilityConfig;
 import openjade.task.config.Constants;
@@ -32,21 +35,13 @@ import org.apache.log4j.Logger;
 public class TaskAgent extends OpenAgent {
 
 	private static final long serialVersionUID = 1L;
-
 	protected static Logger log = Logger.getLogger(TaskAgent.class);
-
 	protected int time;
-
 	private String keystore;
-
 	private String keystorePassword;
-
 	private TrustModel trustModel;
-
-	private SatisfactionCache cache;
-
+	private RatingCache cache;
 	private Ability ability;
-
 	private Hashtable<String, List<Task>> tasks = new Hashtable<String, List<Task>>();
 
 	protected void setup() {
@@ -63,11 +58,12 @@ public class TaskAgent extends OpenAgent {
 			addBehaviour(ability);
 		}
 		log.debug("setup: " + getAID().getLocalName());
-		cache = new SatisfactionCache(1, 10);
+		cache = new RatingCache(1, 10);
+//		trustModel.configure(1, 10);
 		addBehaviour(new RegisterServiceBehaviour(this, Constants.SERVICE_WORKER));
 		addBehaviour(new ReceiveOntologyMessageBehaviour(this));
-		addBehaviour(new TaskDelegateBehaviour(this));
-		addBehaviour(new TaskResultBehaviour(this));
+		addBehaviour(new RequestTaskBehaviour(this));
+		addBehaviour(new ResponseTaskBehaviour(this));
 	}
 
 	private Ability createAbility(String _abilityConfig, TaskAgent taskAgent) {
@@ -75,17 +71,17 @@ public class TaskAgent extends OpenAgent {
 		return new Ability(taskAgent, ability);
 	}
 
-	@ReceiveMatchMessage(action = TimerAction.class, ontology = TaskOntology.class)
+	@ReceiveMatchMessage(action = SendIteration.class, ontology = OpenJadeOntology.class)
 	public void receiveTimeAction(ACLMessage message, ContentElement ce) {
-		time = ((TimerAction) ce).getTime();
-		cache.setCurrentTime(time);
+		time = ((SendIteration) ce).getIteration();
+		cache.setIteration(time);
 		createTasks(5);
 		sendSatisfaction();
 	}
 
-	@ReceiveMatchMessage(action = DelegateAction.class, performative = { ACLMessage.REQUEST }, ontology = TaskOntology.class)
+	@ReceiveMatchMessage(action = SendTask.class, performative = { ACLMessage.REQUEST }, ontology = TaskOntology.class)
 	public void receiveTaskRequest(ACLMessage message, ContentElement ce) {
-		DelegateAction action = (DelegateAction) ce;
+		SendTask action = (SendTask) ce;
 		if (ability.addTask(action.getTask())) {
 			tasks.get(Constants.TASK_TO_PROCESS).add(action.getTask());
 		}else{
@@ -97,27 +93,29 @@ public class TaskAgent extends OpenAgent {
 		}
 	}
 
-	@ReceiveMatchMessage(action = DelegateAction.class, performative = { ACLMessage.CONFIRM }, ontology = TaskOntology.class)
+	@ReceiveMatchMessage(action = SendTask.class, performative = { ACLMessage.CONFIRM }, ontology = TaskOntology.class)
 	public void receiveTaskDone(ACLMessage message, ContentElement ce) {
-		DelegateAction da = (DelegateAction) ce;
-		SatisfactionAction sa = new SatisfactionAction();
-		sa.setSatisfaction( (da.getTask().getCompleted() + da.getTask().getPoints()) / 2 );
-		sa.setTrustmodel(trustModel.getName());
-		sa.setTime(time);
-		cache.add(sa);
+		SendTask da = (SendTask) ce;
+
+		int satistaction = (da.getTask().getCompleted() + da.getTask().getPoints()) / 2;
+		
+		Rating rating = new Rating();
+		rating.setClient(message.getSender());
+		rating.setIteration(time);
+		rating.setServer(getAID());
+		rating.setTerm(trustModel.getName());
+		rating.setValue(satistaction);
+		trustModel.addRating(rating);
+		cache.add(rating);
 	}
 
-	@ReceiveMatchMessage(action = DelegateAction.class, performative = { ACLMessage.REFUSE }, ontology = TaskOntology.class)
+	@ReceiveMatchMessage(action = SendTask.class, performative = { ACLMessage.REFUSE }, ontology = TaskOntology.class)
 	public void receiveTaskRefuse(ACLMessage message, ContentElement ce) {
 		log.debug("REFUSE");
-		SatisfactionAction sa = new SatisfactionAction();
-		sa.setSatisfaction(0);
-		sa.setTrustmodel(trustModel.getName());
-		sa.setTime(time);
-		cache.add(sa);
+		cache.add(newRating(getAID(), message.getSender(), time, trustModel.getName(), 0.0F));
 	}
 
-	public void sendConfirmTask(DelegateAction da) {
+	public void sendConfirmTask(SendTask da) {
 		ACLMessage msg = new ACLMessage(ACLMessage.CONFIRM);
 		msg.setSender(getAID());
 		msg.addReceiver(da.getTask().getTaskSender());
@@ -126,17 +124,17 @@ public class TaskAgent extends OpenAgent {
 	}
 
 	private void sendSatisfaction() {
-		Float value = cache.getSatisfaction();
+		Float value = cache.getValue();
 		if (trustModel != null && value != null) {
-			SatisfactionAction sa = new SatisfactionAction();
-			sa.setTrustmodel(trustModel.getName());
-			sa.setTime(time);
-			sa.setSatisfaction(value);
-
+			SendRating sendRating = new SendRating();
+			
+			Rating rating = newRating(getAID(), getAID(), time, trustModel.getName(), value);
+			sendRating.setRating(rating);
+			
 			ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
 			msg.setSender(getAID());
 			msg.addReceiver(getAIDByService(Constants.SERVICE_MONITOR).get(0));
-			fillContent(msg, sa, getCodec(), TaskOntology.getInstance());
+			fillContent(msg, sendRating, getCodec(), OpenJadeOntology.getInstance());
 			signerAndSend(msg);
 		}
 	}
@@ -170,6 +168,16 @@ public class TaskAgent extends OpenAgent {
 
 	public Hashtable<String, List<Task>> getTasks() {
 		return tasks;
+	}
+	
+	private Rating newRating(AID _client, AID _server, int _iteration, String _term, float _value){
+		Rating rating = new Rating();
+		rating.setClient(_client);
+		rating.setIteration(_iteration);
+		rating.setServer(_server);
+		rating.setTerm(_term);
+		rating.setValue(_value);
+		return rating;
 	}
 
 }

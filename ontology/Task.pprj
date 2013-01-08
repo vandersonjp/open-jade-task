@@ -1,4 +1,4 @@
-; Tue Jan 08 11:00:41 BRT 2013
+; Tue Jan 08 14:07:28 BRT 2013
 ; 
 ;+ (version "3.2.1")
 ;+ (build "Build 365")
@@ -18,8 +18,7 @@
 	(y 0))
 
 ([BROWSER_SLOT_NAMES] of  Property_List
-
-	(properties [Task_ProjectKB_Instance_10148]))
+)
 
 ([CLSES_TAB] of  Widget
 
@@ -919,30 +918,6 @@
 		[STANDARD_SLOT_TYPE_WIDGET]
 		[KB_122877_Instance_77]))
 
-([Task_ProjectKB_Instance_10143] of  Boolean
-
-	(boolean_value FALSE)
-	(name "ButtonDisplayed-View References to Value"))
-
-([Task_ProjectKB_Instance_10144] of  Boolean
-
-	(boolean_value FALSE)
-	(name "ButtonDisplayed-Delete Instance"))
-
-([Task_ProjectKB_Instance_10145] of  Property_List
-)
-
-([Task_ProjectKB_Instance_10146] of  Property_List
-)
-
-([Task_ProjectKB_Instance_10147] of  Property_List
-)
-
-([Task_ProjectKB_Instance_10148] of  String
-
-	(name ":INSTANCE-ANNOTATION")
-	(string_value "%3AANNOTATION-TEXT"))
-
 ([Task_ProjectKB_Instance_133] of  Boolean
 
 	(boolean_value FALSE)
@@ -975,6 +950,25 @@
 )
 
 ([Task_ProjectKB_Instance_142] of  Property_List
+)
+
+([Task_ProjectKB_Instance_143] of  Boolean
+
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-View References to Value"))
+
+([Task_ProjectKB_Instance_144] of  Boolean
+
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-Delete Instance"))
+
+([Task_ProjectKB_Instance_145] of  Property_List
+)
+
+([Task_ProjectKB_Instance_146] of  Property_List
+)
+
+([Task_ProjectKB_Instance_147] of  Property_List
 )
 
 ([VERTICAL_STRETCHER] of  String

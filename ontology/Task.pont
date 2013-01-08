@@ -1,4 +1,4 @@
-; Tue Jan 08 11:00:41 BRT 2013
+; Tue Jan 08 14:07:28 BRT 2013
 ; 
 ;+ (version "3.2.1")
 ;+ (build "Build 365")
@@ -12,19 +12,13 @@
 ;+		(allowed-classes AID)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
-	(single-slot completed
-		(type INTEGER)
-		(range 0 100)
-;+		(cardinality 1 1)
-		(create-accessor read-write))
-	(single-slot satisfaction
-		(type FLOAT)
-		(range 0.0 %3FVARIABLE)
-;+		(cardinality 1 1)
-		(create-accessor read-write))
 	(single-slot taskReceive
 		(type INSTANCE)
 ;+		(allowed-classes AID)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot finishTime
+		(type FLOAT)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(single-slot points
@@ -32,15 +26,19 @@
 		(range 0 100)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
-	(single-slot status
-		(type SYMBOL)
-		(allowed-values new done cancel)
-		(default new)
-;+		(cardinality 1 1)
-		(create-accessor read-write))
 	(single-slot disponivel
 		(type SYMBOL)
 		(allowed-values FALSE TRUE)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot rating
+		(type INSTANCE)
+;+		(allowed-classes)
+;+		(cardinality 1 1)
+		(create-accessor read-write))
+	(single-slot task
+		(type INSTANCE)
+;+		(allowed-classes Task)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(single-slot startTime
@@ -52,54 +50,28 @@
 		(allowed-values direct indirect certificated)
 ;+		(cardinality 1 1)
 		(create-accessor read-write))
+	(single-slot status
+		(type SYMBOL)
+		(allowed-values new done cancel)
+		(default new)
+;+		(cardinality 1 1)
+		(create-accessor read-write))
+	(single-slot completed
+		(type INTEGER)
+		(range 0 100)
+;+		(cardinality 1 1)
+		(create-accessor read-write))
+	(single-slot time
+		(type INTEGER)
+		(range 1 %3FVARIABLE)
+;+		(cardinality 1 1)
+		(create-accessor read-write))
 	(single-slot mensagem
 		(type STRING)
 ;+		(cardinality 0 1)
-		(create-accessor read-write))
-	(single-slot task
-		(type INSTANCE)
-;+		(allowed-classes Task)
-;+		(cardinality 0 1)
-		(create-accessor read-write))
-	(single-slot time
-		(type INTEGER)
-		(range 1 %3FVARIABLE)
-;+		(cardinality 1 1)
-		(create-accessor read-write))
-	(single-slot finishTime
-		(type FLOAT)
-;+		(cardinality 0 1)
 		(create-accessor read-write)))
 
-(defclass TimerAction
-	(is-a AgentAction)
-	(role concrete)
-	(single-slot time
-		(type INTEGER)
-		(range 1 %3FVARIABLE)
-;+		(cardinality 1 1)
-		(create-accessor read-write)))
-
-(defclass SatisfactionAction
-	(is-a AgentAction)
-	(role concrete)
-	(single-slot satisfaction
-		(type FLOAT)
-		(range 0.0 %3FVARIABLE)
-;+		(cardinality 1 1)
-		(create-accessor read-write))
-	(single-slot trustmodel
-		(type SYMBOL)
-		(allowed-values direct indirect certificated)
-;+		(cardinality 1 1)
-		(create-accessor read-write))
-	(single-slot time
-		(type INTEGER)
-		(range 1 %3FVARIABLE)
-;+		(cardinality 1 1)
-		(create-accessor read-write)))
-
-(defclass DelegateAction
+(defclass SendTask
 	(is-a AgentAction)
 	(role concrete)
 	(single-slot task
@@ -116,11 +88,6 @@
 ;+		(allowed-classes AID)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
-	(single-slot completed
-		(type INTEGER)
-		(range 0 100)
-;+		(cardinality 1 1)
-		(create-accessor read-write))
 	(single-slot taskReceive
 		(type INSTANCE)
 ;+		(allowed-classes AID)
@@ -135,5 +102,10 @@
 		(type SYMBOL)
 		(allowed-values new done cancel)
 		(default new)
+;+		(cardinality 1 1)
+		(create-accessor read-write))
+	(single-slot completed
+		(type INTEGER)
+		(range 0 100)
 ;+		(cardinality 1 1)
 		(create-accessor read-write)))

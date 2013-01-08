@@ -6,11 +6,11 @@ import jade.util.leap.*;
 import jade.core.*;
 
 /**
-* Protege name: DelegateAction
+* Protege name: SendTask
 * @author ontology bean generator
-* @version 2013/01/8, 11:00:44
+* @version 2013/01/8, 14:07:34
 */
-public class DelegateAction implements AgentAction {
+public class SendTask implements AgentAction {
 
    /**
 * Protege name: task

@@ -1,11 +1,7 @@
-; Tue Jan 08 11:00:41 BRT 2013
+; Tue Jan 08 14:07:28 BRT 2013
 ; 
 ;+ (version "3.2.1")
 ;+ (build "Build 365")
-
-([DelegateAction] of  %3AJADE-CLASS
-
-	(%3AJADE-IGNORE FALSE))
 
 ([project+annotation] of  %3APROJECT-ANNOTATION
 
@@ -14,14 +10,10 @@
 	(%3APACKAGE "openjade.task.agent.ontology")
 	(%3ASUPPORT "j2se"))
 
-([SatisfactionAction] of  %3AJADE-CLASS
+([SendTask] of  %3AJADE-CLASS
 
 	(%3AJADE-IGNORE FALSE))
 
 ([Task] of  %3AJADE-CLASS
-
-	(%3AJADE-IGNORE FALSE))
-
-([TimerAction] of  %3AJADE-CLASS
 
 	(%3AJADE-IGNORE FALSE))

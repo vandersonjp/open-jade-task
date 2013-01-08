@@ -9,7 +9,7 @@ import jade.core.CaseInsensitiveString;
 
 /** file: TaskOntology.java
  * @author ontology bean generator
- * @version 2013/01/8, 11:00:44
+ * @version 2013/01/8, 14:07:34
  */
 public class TaskOntology extends jade.content.onto.Ontology  {
   //NAME
@@ -23,18 +23,12 @@ public class TaskOntology extends jade.content.onto.Ontology  {
 
 
    // VOCABULARY
-    public static final String SATISFACTIONACTION_TIME="time";
-    public static final String SATISFACTIONACTION_TRUSTMODEL="trustmodel";
-    public static final String SATISFACTIONACTION_SATISFACTION="satisfaction";
-    public static final String SATISFACTIONACTION="SatisfactionAction";
-    public static final String DELEGATEACTION_TASK="task";
-    public static final String DELEGATEACTION="DelegateAction";
-    public static final String TIMERACTION_TIME="time";
-    public static final String TIMERACTION="TimerAction";
+    public static final String SENDTASK_TASK="task";
+    public static final String SENDTASK="SendTask";
+    public static final String TASK_COMPLETED="completed";
     public static final String TASK_STATUS="status";
     public static final String TASK_POINTS="points";
     public static final String TASK_TASKRECEIVE="taskReceive";
-    public static final String TASK_COMPLETED="completed";
     public static final String TASK_TASKSENDER="taskSender";
     public static final String TASK="Task";
 
@@ -50,12 +44,8 @@ public class TaskOntology extends jade.content.onto.Ontology  {
     add(taskSchema, openjade.task.agent.ontology.Task.class);
 
     // adding AgentAction(s)
-    AgentActionSchema timerActionSchema = new AgentActionSchema(TIMERACTION);
-    add(timerActionSchema, openjade.task.agent.ontology.TimerAction.class);
-    AgentActionSchema delegateActionSchema = new AgentActionSchema(DELEGATEACTION);
-    add(delegateActionSchema, openjade.task.agent.ontology.DelegateAction.class);
-    AgentActionSchema satisfactionActionSchema = new AgentActionSchema(SATISFACTIONACTION);
-    add(satisfactionActionSchema, openjade.task.agent.ontology.SatisfactionAction.class);
+    AgentActionSchema sendTaskSchema = new AgentActionSchema(SENDTASK);
+    add(sendTaskSchema, openjade.task.agent.ontology.SendTask.class);
 
     // adding AID(s)
 
@@ -64,15 +54,11 @@ public class TaskOntology extends jade.content.onto.Ontology  {
 
     // adding fields
     taskSchema.add(TASK_TASKSENDER, (ConceptSchema)getSchema(BasicOntology.AID), ObjectSchema.OPTIONAL);
-    taskSchema.add(TASK_COMPLETED, (TermSchema)getSchema(BasicOntology.INTEGER), ObjectSchema.MANDATORY);
     taskSchema.add(TASK_TASKRECEIVE, (ConceptSchema)getSchema(BasicOntology.AID), ObjectSchema.OPTIONAL);
     taskSchema.add(TASK_POINTS, (TermSchema)getSchema(BasicOntology.INTEGER), ObjectSchema.OPTIONAL);
     taskSchema.add(TASK_STATUS, (TermSchema)getSchema(BasicOntology.STRING), ObjectSchema.MANDATORY);
-    timerActionSchema.add(TIMERACTION_TIME, (TermSchema)getSchema(BasicOntology.INTEGER), ObjectSchema.MANDATORY);
-    delegateActionSchema.add(DELEGATEACTION_TASK, taskSchema, ObjectSchema.OPTIONAL);
-    satisfactionActionSchema.add(SATISFACTIONACTION_SATISFACTION, (TermSchema)getSchema(BasicOntology.FLOAT), ObjectSchema.MANDATORY);
-    satisfactionActionSchema.add(SATISFACTIONACTION_TRUSTMODEL, (TermSchema)getSchema(BasicOntology.STRING), ObjectSchema.MANDATORY);
-    satisfactionActionSchema.add(SATISFACTIONACTION_TIME, (TermSchema)getSchema(BasicOntology.INTEGER), ObjectSchema.MANDATORY);
+    taskSchema.add(TASK_COMPLETED, (TermSchema)getSchema(BasicOntology.INTEGER), ObjectSchema.MANDATORY);
+    sendTaskSchema.add(SENDTASK_TASK, taskSchema, ObjectSchema.OPTIONAL);
 
     // adding name mappings
 

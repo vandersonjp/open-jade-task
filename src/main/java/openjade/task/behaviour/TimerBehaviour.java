@@ -8,9 +8,9 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import openjade.core.behaviours.BehaviourException;
 import openjade.core.behaviours.CyclicTimerBehaviour;
+import openjade.ontology.OpenJadeOntology;
+import openjade.ontology.SendIteration;
 import openjade.task.agent.TimerAgent;
-import openjade.task.agent.ontology.TaskOntology;
-import openjade.task.agent.ontology.TimerAction;
 import openjade.task.config.Constants;
 
 import org.apache.log4j.Logger;
@@ -50,9 +50,9 @@ public class TimerBehaviour extends CyclicTimerBehaviour {
 			throw new BehaviourException(e.getMessage(), e);
 		}
 		message.setSender(myAgent.getAID());
-		TimerAction action = new TimerAction();
-		action.setTime(time);
-		myAgent.fillContent(message, action, myAgent.getCodec(), TaskOntology.getInstance());
+		SendIteration action = new SendIteration();
+		action.setIteration(time);
+		myAgent.fillContent(message, action, myAgent.getCodec(), OpenJadeOntology.getInstance());
 		myAgent.signerAndSend(message);
 	}
 }
