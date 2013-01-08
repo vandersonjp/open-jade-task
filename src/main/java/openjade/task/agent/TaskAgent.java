@@ -22,11 +22,10 @@ import openjade.ontology.SendRating;
 import openjade.task.agent.ontology.SendTask;
 import openjade.task.agent.ontology.Task;
 import openjade.task.agent.ontology.TaskOntology;
+import openjade.task.behaviour.AbilityBehaviour;
+import openjade.task.behaviour.AbilityConfig;
 import openjade.task.behaviour.RequestTaskBehaviour;
 import openjade.task.behaviour.ResponseTaskBehaviour;
-import openjade.task.behaviour.ability.Ability;
-import openjade.task.behaviour.ability.AbilityConfig;
-import openjade.task.config.Constants;
 import openjade.trust.TrustModel;
 import openjade.trust.TrustModelFactory;
 
@@ -41,7 +40,7 @@ public class TaskAgent extends OpenAgent {
 	private String keystorePassword;
 	private TrustModel trustModel;
 	private RatingCache cache;
-	private Ability ability;
+	private AbilityBehaviour ability;
 	private Hashtable<String, List<Task>> tasks = new Hashtable<String, List<Task>>();
 
 	protected void setup() {
@@ -66,9 +65,9 @@ public class TaskAgent extends OpenAgent {
 		addBehaviour(new ResponseTaskBehaviour(this));
 	}
 
-	private Ability createAbility(String _abilityConfig, TaskAgent taskAgent) {
+	private AbilityBehaviour createAbility(String _abilityConfig, TaskAgent taskAgent) {
 		AbilityConfig ability = AbilityConfig.valueOf(_abilityConfig.toUpperCase());		
-		return new Ability(taskAgent, ability);
+		return new AbilityBehaviour(taskAgent, ability);
 	}
 
 	@ReceiveMatchMessage(action = SendIteration.class, ontology = OpenJadeOntology.class)

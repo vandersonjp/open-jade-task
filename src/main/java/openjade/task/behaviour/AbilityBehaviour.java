@@ -1,21 +1,21 @@
-package openjade.task.behaviour.ability;
+package openjade.task.behaviour;
 
 import jade.core.Agent;
 
 import java.util.List;
 
 import openjade.core.behaviours.CyclicTimerBehaviour;
+import openjade.task.agent.Constants;
 import openjade.task.agent.TaskAgent;
 import openjade.task.agent.ontology.Task;
-import openjade.task.config.Constants;
 
 import org.apache.log4j.Logger;
 
-public class Ability extends CyclicTimerBehaviour {
+public class AbilityBehaviour extends CyclicTimerBehaviour {
 
 	private static final long serialVersionUID = 1L;
 
-	protected static Logger log = Logger.getLogger(Ability.class);
+	protected static Logger log = Logger.getLogger(AbilityBehaviour.class);
 
 	protected long capacity = 0;
 
@@ -23,7 +23,7 @@ public class Ability extends CyclicTimerBehaviour {
 
 	private AbilityConfig abilityConfig;
 
-	public Ability(Agent agent, AbilityConfig abilityConfig) {
+	public AbilityBehaviour(Agent agent, AbilityConfig abilityConfig) {
 		super(agent, abilityConfig.speed(), abilityConfig.speed());
 		myAgent = (TaskAgent) agent;
 		this.abilityConfig = abilityConfig;

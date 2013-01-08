@@ -6,10 +6,10 @@ import jade.lang.acl.ACLMessage;
 import java.util.List;
 
 import openjade.core.behaviours.CyclicTimerBehaviour;
+import openjade.task.agent.Constants;
 import openjade.task.agent.TaskAgent;
 import openjade.task.agent.ontology.SendTask;
 import openjade.task.agent.ontology.Task;
-import openjade.task.config.Constants;
 
 import org.apache.log4j.Logger;
 

@@ -11,8 +11,8 @@ import openjade.core.behaviours.BehaviourException;
 import openjade.core.behaviours.CyclicTimerBehaviour;
 import openjade.ontology.OpenJadeOntology;
 import openjade.ontology.SendIteration;
+import openjade.task.agent.Constants;
 import openjade.task.agent.TimerAgent;
-import openjade.task.config.Constants;
 
 import org.apache.log4j.Logger;
 

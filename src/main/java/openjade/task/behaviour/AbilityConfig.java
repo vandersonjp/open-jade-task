@@ -1,4 +1,4 @@
-package openjade.task.behaviour.ability;
+package openjade.task.behaviour;
 
 public enum AbilityConfig {
 	
