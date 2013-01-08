@@ -6,6 +6,7 @@ import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
+import openjade.core.OpenAgent;
 import openjade.core.behaviours.BehaviourException;
 import openjade.core.behaviours.CyclicTimerBehaviour;
 import openjade.ontology.OpenJadeOntology;
@@ -34,7 +35,7 @@ public class TimerBehaviour extends CyclicTimerBehaviour {
 		time++;
 		log.debug(".............. time [" + time + "] ..............");
 		ACLMessage message = new ACLMessage(ACLMessage.INFORM);
-		String[] services = { Constants.SERVICE_MONITOR, Constants.SERVICE_WORKER };
+		String[] services = { OpenAgent.SERVICE_TRUST_MONITOR, Constants.SERVICE_WORKER };
 		try {
 			for (String service : services) {
 				DFAgentDescription dfd = new DFAgentDescription();

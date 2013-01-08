@@ -3,7 +3,6 @@ package openjade.task.config;
 public class Constants {
 
 	public static final String SERVICE_WORKER = "worker";
-	public static final String SERVICE_MONITOR = "monitor";
 	
 	public static final String TASK_TO_DELEGATE = "TASK_TODO";
 	public static final String TASK_TO_PROCESS = "TASK_TO_PROCESS";

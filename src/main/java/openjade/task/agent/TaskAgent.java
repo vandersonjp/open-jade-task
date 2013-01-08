@@ -126,16 +126,19 @@ public class TaskAgent extends OpenAgent {
 	private void sendSatisfaction() {
 		Float value = cache.getValue();
 		if (trustModel != null && value != null) {
-			SendRating sendRating = new SendRating();
-			
-			Rating rating = newRating(getAID(), getAID(), time, trustModel.getName(), value);
-			sendRating.setRating(rating);
-			
-			ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
-			msg.setSender(getAID());
-			msg.addReceiver(getAIDByService(Constants.SERVICE_MONITOR).get(0));
-			fillContent(msg, sendRating, getCodec(), OpenJadeOntology.getInstance());
-			signerAndSend(msg);
+			List<AID> aids = getAIDByService(OpenAgent.SERVICE_TRUST_MONITOR);
+			if (!aids.isEmpty()){
+				SendRating sendRating = new SendRating();
+				
+				Rating rating = newRating(getAID(), getAID(), time, trustModel.getName(), value);
+				sendRating.setRating(rating);
+				
+				ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
+				msg.setSender(getAID());
+				msg.addReceiver(aids.get(0));
+				fillContent(msg, sendRating, getCodec(), OpenJadeOntology.getInstance());
+				signerAndSend(msg);
+			}
 		}
 	}
 
