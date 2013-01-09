@@ -35,10 +35,9 @@ public class TaskAgent extends OpenAgent {
 
 	private static final long serialVersionUID = 1L;
 	protected static Logger log = Logger.getLogger(TaskAgent.class);
-	protected int time;
+	
 	private String keystore;
 	private String keystorePassword;
-	private TrustModel trustModel;
 	private RatingCache cache;
 	private AbilityBehaviour ability;
 	private Hashtable<String, List<Task>> tasks = new Hashtable<String, List<Task>>();
@@ -58,7 +57,6 @@ public class TaskAgent extends OpenAgent {
 		}
 		log.debug("setup: " + getAID().getLocalName());
 		cache = new RatingCache(1, 10);
-//		trustModel.configure(1, 10);
 		addBehaviour(new RegisterServiceBehaviour(this, Constants.SERVICE_WORKER));
 		addBehaviour(new ReceiveOntologyMessageBehaviour(this));
 		addBehaviour(new RequestTaskBehaviour(this));
@@ -66,14 +64,15 @@ public class TaskAgent extends OpenAgent {
 	}
 
 	private AbilityBehaviour createAbility(String _abilityConfig, TaskAgent taskAgent) {
-		AbilityConfig ability = AbilityConfig.valueOf(_abilityConfig.toUpperCase());		
+		AbilityConfig ability = AbilityConfig.valueOf(_abilityConfig.toUpperCase());
 		return new AbilityBehaviour(taskAgent, ability);
 	}
 
+	@Override
 	@ReceiveMatchMessage(action = SendIteration.class, ontology = OpenJadeOntology.class)
 	public void receiveTimeAction(ACLMessage message, ContentElement ce) {
-		time = ((SendIteration) ce).getIteration();
-		cache.setIteration(time);
+		super.receiveTimeAction(message, ce);
+		cache.setIteration(iteration);
 		createTasks(5);
 		sendSatisfaction();
 	}
@@ -83,7 +82,7 @@ public class TaskAgent extends OpenAgent {
 		SendTask action = (SendTask) ce;
 		if (ability.addTask(action.getTask())) {
 			tasks.get(Constants.TASK_TO_PROCESS).add(action.getTask());
-		}else{
+		} else {
 			ACLMessage msg = new ACLMessage(ACLMessage.REFUSE);
 			msg.setSender(getAID());
 			msg.addReceiver(action.getTask().getTaskSender());
@@ -95,23 +94,18 @@ public class TaskAgent extends OpenAgent {
 	@ReceiveMatchMessage(action = SendTask.class, performative = { ACLMessage.CONFIRM }, ontology = TaskOntology.class)
 	public void receiveTaskDone(ACLMessage message, ContentElement ce) {
 		SendTask da = (SendTask) ce;
-
 		int satistaction = (da.getTask().getCompleted() + da.getTask().getPoints()) / 2;
+
+		trustModel.addRating(newRating(getAID(), message.getSender(), iteration, "completed", da.getTask().getCompleted()));
+		trustModel.addRating(newRating(getAID(), message.getSender(), iteration, "points", da.getTask().getPoints()));
 		
-		Rating rating = new Rating();
-		rating.setClient(message.getSender());
-		rating.setIteration(time);
-		rating.setServer(getAID());
-		rating.setTerm(trustModel.getName());
-		rating.setValue(satistaction);
-		trustModel.addRating(rating);
-		cache.add(rating);
+		cache.add(newRating(getAID(), message.getSender(), iteration, trustModel.getName(), satistaction));
 	}
 
 	@ReceiveMatchMessage(action = SendTask.class, performative = { ACLMessage.REFUSE }, ontology = TaskOntology.class)
 	public void receiveTaskRefuse(ACLMessage message, ContentElement ce) {
 		log.debug("REFUSE");
-		cache.add(newRating(getAID(), message.getSender(), time, trustModel.getName(), 0.0F));
+		cache.add(newRating(getAID(), message.getSender(), iteration, trustModel.getName(), 0.0F));
 	}
 
 	public void sendConfirmTask(SendTask da) {
@@ -126,12 +120,12 @@ public class TaskAgent extends OpenAgent {
 		Float value = cache.getValue();
 		if (trustModel != null && value != null) {
 			List<AID> aids = getAIDByService(OpenAgent.SERVICE_TRUST_MONITOR);
-			if (!aids.isEmpty()){
+			if (!aids.isEmpty()) {
 				SendRating sendRating = new SendRating();
-				
-				Rating rating = newRating(getAID(), getAID(), time, trustModel.getName(), value);
+
+				Rating rating = newRating(getAID(), getAID(), iteration, trustModel.getName(), value);
 				sendRating.setRating(rating);
-				
+
 				ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
 				msg.setSender(getAID());
 				msg.addReceiver(aids.get(0));
@@ -149,7 +143,8 @@ public class TaskAgent extends OpenAgent {
 			task.setStatus(Constants.STATUS_NEW);
 			task.setTaskSender(getAID());
 			tasks.get(Constants.TASK_TO_DELEGATE).add(task);
-//			log.debug("...... createTasks ....... total: " + tasks.get(Constants.TASK_TO_DELEGATE).size()  );
+			// log.debug("...... createTasks ....... total: " +
+			// tasks.get(Constants.TASK_TO_DELEGATE).size() );
 		}
 	}
 
@@ -171,8 +166,8 @@ public class TaskAgent extends OpenAgent {
 	public Hashtable<String, List<Task>> getTasks() {
 		return tasks;
 	}
-	
-	private Rating newRating(AID _client, AID _server, int _iteration, String _term, float _value){
+
+	private Rating newRating(AID _client, AID _server, int _iteration, String _term, float _value) {
 		Rating rating = new Rating();
 		rating.setClient(_client);
 		rating.setIteration(_iteration);

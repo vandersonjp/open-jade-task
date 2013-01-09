@@ -12,4 +12,10 @@
 		<priority value="debug"/>
 		<appender-ref ref="CONSOLE" />
 	</category>	
+
+	<category name="openjade.trust"  >
+		<priority value="debug"/>
+		<appender-ref ref="CONSOLE" />
+	</category>	
+	
 </log4j:configuration>
