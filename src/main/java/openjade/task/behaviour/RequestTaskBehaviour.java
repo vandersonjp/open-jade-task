@@ -11,6 +11,7 @@ import openjade.task.agent.Constants;
 import openjade.task.agent.TaskAgent;
 import openjade.task.agent.ontology.SendTask;
 import openjade.task.agent.ontology.Task;
+import openjade.trust.model.Pair;
 
 import org.apache.log4j.Logger;
 
@@ -32,11 +33,21 @@ public class RequestTaskBehaviour extends CyclicTimerBehaviour {
 		List<Task> tasks = myAgent.getTasks().get(Constants.TASK_TO_DELEGATE);
 		try {
 			if (!tasks.isEmpty()) {
-				List<AID> receives = myAgent.getAIDByService(Constants.SERVICE_WORKER);
-				if (!receives.isEmpty()) {
+				AID receive = null;
+				
+				String[] terms = {"completed", "points"};
+				List<Pair> pairs = myAgent.getTrustModel().getPairs(terms);
+				
+				if (pairs == null || pairs.isEmpty()){
+					List<AID>receives = myAgent.getAIDByService(Constants.SERVICE_WORKER);
+					receive = receives.get((int) (Math.random() * receives.size()));
+				}else{
+					receive = pairs.get(pairs.size()-1).getAid();
+				}
+				
+				if (receive != null) {
 
 					Task task = tasks.remove(0);
-					AID receive = receives.get((int) (Math.random() * receives.size()));
 
 					SendTask action = new SendTask();
 					action.setTask(task);
@@ -49,7 +60,7 @@ public class RequestTaskBehaviour extends CyclicTimerBehaviour {
 				}
 			}
 		} catch (Exception e) {
-			log.error(e);
+			log.error(e.getMessage(), e);
 		}
 	}
 }

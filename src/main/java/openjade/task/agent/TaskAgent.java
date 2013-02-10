@@ -26,7 +26,6 @@ import openjade.task.behaviour.AbilityBehaviour;
 import openjade.task.behaviour.AbilityConfig;
 import openjade.task.behaviour.RequestTaskBehaviour;
 import openjade.task.behaviour.ResponseTaskBehaviour;
-import openjade.trust.TrustModel;
 import openjade.trust.TrustModelFactory;
 
 import org.apache.log4j.Logger;
@@ -68,10 +67,10 @@ public class TaskAgent extends OpenAgent {
 		return new AbilityBehaviour(taskAgent, ability);
 	}
 
-	@Override
 	@ReceiveMatchMessage(action = SendIteration.class, ontology = OpenJadeOntology.class)
 	public void receiveTimeAction(ACLMessage message, ContentElement ce) {
-		super.receiveTimeAction(message, ce);
+		iteration = ((SendIteration) ce).getIteration();
+		this.trustModel.setIteration(iteration);
 		cache.setIteration(iteration);
 		createTasks(5);
 		sendSatisfaction();
@@ -106,13 +105,14 @@ public class TaskAgent extends OpenAgent {
 	public void receiveTaskRefuse(ACLMessage message, ContentElement ce) {
 		log.debug("REFUSE");
 		cache.add(newRating(getAID(), message.getSender(), iteration, trustModel.getName(), 0.0F));
+		cache.add(newRating(getAID(), message.getSender(), iteration, "Refuse", 1.0F));
 	}
 
-	public void sendConfirmTask(SendTask da) {
+	public void sendConfirmTask(SendTask action) {
 		ACLMessage msg = new ACLMessage(ACLMessage.CONFIRM);
 		msg.setSender(getAID());
-		msg.addReceiver(da.getTask().getTaskSender());
-		fillContent(msg, da, getCodec(), TaskOntology.getInstance());
+		msg.addReceiver(action.getTask().getTaskSender());
+		fillContent(msg, action, getCodec(), TaskOntology.getInstance());
 		signerAndSend(msg);
 	}
 
@@ -133,6 +133,25 @@ public class TaskAgent extends OpenAgent {
 				signerAndSend(msg);
 			}
 		}
+		
+
+		value = cache.getValue(iteration, "Refuse");
+		if (trustModel != null && value != null) {
+			List<AID> aids = getAIDByService(OpenAgent.SERVICE_TRUST_MONITOR);
+			if (!aids.isEmpty()) {
+				SendRating sendRating = new SendRating();
+
+				Rating rating = newRating(getAID(), getAID(), iteration, "Refuse", value);
+				sendRating.setRating(rating);
+
+				ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
+				msg.setSender(getAID());
+				msg.addReceiver(aids.get(0));
+				fillContent(msg, sendRating, getCodec(), OpenJadeOntology.getInstance());
+				signerAndSend(msg);
+			}
+		}
+
 	}
 
 	private void createTasks(int count) {
