@@ -56,7 +56,9 @@ public class TaskAgent extends OpenAgent {
 		}
 		log.debug("setup: " + getAID().getLocalName());
 		cache = new RatingCache(1, 10);
-		addBehaviour(new RegisterServiceBehaviour(this, Constants.SERVICE_WORKER));
+		String[] services = {Constants.SERVICE_WORKER, OpenAgent.TIMER_LISTENER};
+		addBehaviour(new RegisterServiceBehaviour(this, services));
+		
 		addBehaviour(new ReceiveOntologyMessageBehaviour(this));
 		addBehaviour(new RequestTaskBehaviour(this));
 		addBehaviour(new ResponseTaskBehaviour(this));
