@@ -23,7 +23,6 @@ import openjade.task.agent.ontology.SendTask;
 import openjade.task.agent.ontology.Task;
 import openjade.task.agent.ontology.TaskOntology;
 import openjade.task.behaviour.AbilityBehaviour;
-import openjade.task.behaviour.AbilityConfig;
 import openjade.task.behaviour.RequestTaskBehaviour;
 import openjade.task.behaviour.ResponseTaskBehaviour;
 import openjade.trust.TrustModelFactory;
@@ -51,11 +50,12 @@ public class TaskAgent extends OpenAgent {
 		moveContainer((String) getArguments()[2]);
 		if (getArguments().length == 5) {
 			trustModel = TrustModelFactory.create((String) getArguments()[3]);
-			ability = createAbility((String) getArguments()[4], this);
+			ability = AbilityBehaviour.getInstance((String) getArguments()[4], this);
 			addBehaviour(ability);
 		}
 		log.debug("setup: " + getAID().getLocalName());
 		cache = new RatingCache(1, 10);
+		
 		String[] services = {Constants.SERVICE_WORKER, OpenAgent.TIMER_LISTENER};
 		addBehaviour(new RegisterServiceBehaviour(this, services));
 		
@@ -64,11 +64,14 @@ public class TaskAgent extends OpenAgent {
 		addBehaviour(new ResponseTaskBehaviour(this));
 	}
 
-	private AbilityBehaviour createAbility(String _abilityConfig, TaskAgent taskAgent) {
-		AbilityConfig ability = AbilityConfig.valueOf(_abilityConfig.toUpperCase());
-		return new AbilityBehaviour(taskAgent, ability);
-	}
 
+
+	/**
+	 * Para cada iteração cria um conjunto de tarefas para serem processadas e envia suas satisfações
+	 * para a iteração atual
+	 * @param message
+	 * @param ce
+	 */
 	@ReceiveMatchMessage(action = SendIteration.class, ontology = OpenJadeOntology.class)
 	public void receiveTimeAction(ACLMessage message, ContentElement ce) {
 		iteration = ((SendIteration) ce).getIteration();

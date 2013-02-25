@@ -10,7 +10,9 @@ import openjade.task.agent.TaskAgent;
 import openjade.task.agent.ontology.Task;
 
 import org.apache.log4j.Logger;
-
+/**
+ * Habilidade para tratar tarefas 
+ */
 public class AbilityBehaviour extends CyclicTimerBehaviour {
 
 	private static final long serialVersionUID = 1L;
@@ -70,6 +72,9 @@ public class AbilityBehaviour extends CyclicTimerBehaviour {
 		return true;
 	}
 
+	/**
+	 * Trata todas as tarefas no status "to process"
+	 */
 	@Override
 	public void run() {
 		List<Task> tasks = myAgent.getTasks().get(Constants.TASK_TO_PROCESS);
@@ -81,5 +86,10 @@ public class AbilityBehaviour extends CyclicTimerBehaviour {
 			task.setPoints(getPoints(task.getPoints()));
 			myAgent.getTasks().get(Constants.TASK_TO_COMPLETED).add(task);
 		}
+	}
+
+	public static AbilityBehaviour getInstance(String _abilityConfig, TaskAgent taskAgent) {
+		AbilityConfig ability = AbilityConfig.valueOf(_abilityConfig.toUpperCase());
+		return new AbilityBehaviour(taskAgent, ability);
 	}
 }
