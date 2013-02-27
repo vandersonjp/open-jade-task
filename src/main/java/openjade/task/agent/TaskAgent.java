@@ -33,7 +33,7 @@ public class TaskAgent extends OpenAgent {
 
 	private static final long serialVersionUID = 1L;
 	protected static Logger log = Logger.getLogger(TaskAgent.class);
-	
+
 	private String keystore;
 	private String keystorePassword;
 	private RatingCache cache;
@@ -55,20 +55,19 @@ public class TaskAgent extends OpenAgent {
 		}
 		log.debug("setup: " + getAID().getLocalName());
 		cache = new RatingCache(1, 10);
-		
-		String[] services = {Constants.SERVICE_WORKER, OpenAgent.TIMER_LISTENER};
+
+		String[] services = { Constants.SERVICE_WORKER, OpenAgent.TIMER_LISTENER };
 		addBehaviour(new RegisterServiceBehaviour(this, services));
-		
+
 		addBehaviour(new ReceiveOntologyMessageBehaviour(this));
 		addBehaviour(new RequestTaskBehaviour(this));
 		addBehaviour(new ResponseTaskBehaviour(this));
 	}
 
-
-
 	/**
-	 * Para cada iteração cria um conjunto de tarefas para serem processadas e envia suas satisfações
-	 * para a iteração atual
+	 * Para cada iteração cria um conjunto de tarefas para serem processadas e
+	 * envia suas satisfações para a iteração atual
+	 * 
 	 * @param message
 	 * @param ce
 	 */
@@ -102,7 +101,7 @@ public class TaskAgent extends OpenAgent {
 
 		trustModel.addRating(newRating(getAID(), message.getSender(), iteration, "completed", da.getTask().getCompleted()));
 		trustModel.addRating(newRating(getAID(), message.getSender(), iteration, "points", da.getTask().getPoints()));
-		
+
 		cache.add(newRating(getAID(), message.getSender(), iteration, trustModel.getName(), satistaction));
 	}
 
@@ -136,25 +135,21 @@ public class TaskAgent extends OpenAgent {
 				msg.addReceiver(aids.get(0));
 				fillContent(msg, sendRating, getCodec(), OpenJadeOntology.getInstance());
 				signerAndSend(msg);
+
+				//Send Refuse
+//				value = cache.getValue(iteration, "Refuse");
+//				sendRating = new SendRating();
+//				
+//				rating = newRating(getAID(), getAID(), iteration, "Refuse", value);
+//				sendRating.setRating(rating);
+//
+//				msg = new ACLMessage(ACLMessage.INFORM);
+//				msg.setSender(getAID());
+//				msg.addReceiver(aids.get(0));
+//				fillContent(msg, sendRating, getCodec(), OpenJadeOntology.getInstance());
+//				signerAndSend(msg);
 			}
-		}
-		
 
-		value = cache.getValue(iteration, "Refuse");
-		if (trustModel != null && value != null) {
-			List<AID> aids = getAIDByService(OpenAgent.SERVICE_TRUST_MONITOR);
-			if (!aids.isEmpty()) {
-				SendRating sendRating = new SendRating();
-
-				Rating rating = newRating(getAID(), getAID(), iteration, "Refuse", value);
-				sendRating.setRating(rating);
-
-				ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
-				msg.setSender(getAID());
-				msg.addReceiver(aids.get(0));
-				fillContent(msg, sendRating, getCodec(), OpenJadeOntology.getInstance());
-				signerAndSend(msg);
-			}
 		}
 
 	}
@@ -167,8 +162,6 @@ public class TaskAgent extends OpenAgent {
 			task.setStatus(Constants.STATUS_NEW);
 			task.setTaskSender(getAID());
 			tasks.get(Constants.TASK_TO_DELEGATE).add(task);
-			// log.debug("...... createTasks ....... total: " +
-			// tasks.get(Constants.TASK_TO_DELEGATE).size() );
 		}
 	}
 
