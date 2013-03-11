@@ -7,13 +7,20 @@ public class Boot {
 	protected static Logger log = Logger.getLogger(Boot.class);
 
 	public static void main(String[] args) {
-		String[] container = { "-gui", "-host", "127.0.0.1", "-monitor" };
-		openjade.Boot.main(container);
-		loadAgents( 1, 5, "agent", "openjade.task.agent.TaskAgent", "Agents-Container", "123456", "openjade.trust.DirectModel", "TERRIBLE");
-		loadAgents( 6, 10, "agent", "openjade.task.agent.TaskAgent", "Agents-Container", "123456", "openjade.trust.NothingModel", "BAD");
-		loadAgents( 11, 14, "agent", "openjade.task.agent.TaskAgent", "Agents-Container", "123456", "openjade.trust.NothingModel", "MODERATE");
-		loadAgents( 15, 17, "agent", "openjade.task.agent.TaskAgent", "Agents-Container", "123456", "openjade.trust.NothingModel", "GOD");
-		loadAgents( 18,20, "agent", "openjade.task.agent.TaskAgent", "Agents-Container", "123456", "openjade.trust.NothingModel", "EXCELLENT");
+		
+		openjade.Boot.loadXml();
+		
+		
+//		String[] container = { "-gui", "-host", "127.0.0.1", "-monitor" };
+//		
+//		openjade.Boot.main(container);
+//		
+//		
+//		loadAgents( 1, 5, "agent", "openjade.task.agent.TaskAgent", "Agents-Container", "123456", "openjade.trust.DirectModel", "TERRIBLE");
+//		loadAgents( 6, 10, "agent", "openjade.task.agent.TaskAgent", "Agents-Container", "123456", "openjade.trust.NothingModel", "BAD");
+//		loadAgents( 11, 14, "agent", "openjade.task.agent.TaskAgent", "Agents-Container", "123456", "openjade.trust.NothingModel", "MODERATE");
+//		loadAgents( 15, 17, "agent", "openjade.task.agent.TaskAgent", "Agents-Container", "123456", "openjade.trust.NothingModel", "GOD");
+//		loadAgents( 18,20, "agent", "openjade.task.agent.TaskAgent", "Agents-Container", "123456", "openjade.trust.NothingModel", "EXCELLENT");
 	}
 
 	private static void loadAgents(int begin, int end, String _nickName, String className, String container, String pass, String _trustModel, String _ability) {
