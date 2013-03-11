@@ -7,12 +7,8 @@ public class Boot {
 	protected static Logger log = Logger.getLogger(Boot.class);
 
 	public static void main(String[] args) {
-		String[] container = { "-gui", "-host", "127.0.0.1" };
+		String[] container = { "-gui", "-host", "127.0.0.1", "-monitor" };
 		openjade.Boot.main(container);
-
-//		loadAgents(1,1, "agent_timer", 		"openjade.task.agent.TimerAgent", 		"Freemarket-Container", "123456", null, null);
-		
-		
 		loadAgents( 1, 5, "agent", "openjade.task.agent.TaskAgent", "Agents-Container", "123456", "openjade.trust.DirectModel", "TERRIBLE");
 		loadAgents( 6, 10, "agent", "openjade.task.agent.TaskAgent", "Agents-Container", "123456", "openjade.trust.NothingModel", "BAD");
 		loadAgents( 11, 14, "agent", "openjade.task.agent.TaskAgent", "Agents-Container", "123456", "openjade.trust.NothingModel", "MODERATE");
