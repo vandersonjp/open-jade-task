@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>open-jade</groupId>
 	<artifactId>open-jade-task</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.0-RC-1</version>
 
 	<properties>
 		<encoding.default>UTF-8</encoding.default>
@@ -57,20 +57,20 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin>			
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
+					<descriptors>
+						<descriptor>src/main/assembly/assembly.xml</descriptor>
+					</descriptors>
 					<archive>
 						<manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
-					</archive>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
+					</archive>					
 				</configuration>
 				<executions>
 					<execution>
-						<id>make-my-jar-with-dependencies</id>
+						<id>standalone</id>
 						<phase>package</phase>
 						<goals>
 							<goal>single</goal>

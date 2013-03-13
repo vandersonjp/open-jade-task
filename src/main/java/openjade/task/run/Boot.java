@@ -7,10 +7,14 @@ public class Boot {
 	protected static Logger log = Logger.getLogger(Boot.class);
 
 	public static void main(String[] args) {
-		if (args != null && args.length > 0) {
-			openjade.Boot.main(args);
-		} else {
-			openjade.Boot.loadXml();
+		try {
+			if (args != null && args.length > 0) {
+				openjade.Boot.main(args);
+			} else {
+				openjade.Boot.loadXml();
+			}			
+		} catch (Exception e) {
+			e.printStackTrace();			
 		}
 	}
 }

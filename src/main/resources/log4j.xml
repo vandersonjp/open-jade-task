@@ -12,12 +12,12 @@
 		<priority value="debug"/>
 		<appender-ref ref="CONSOLE" />
 	</category>	
-<!--
-	<category name="openjade.trust"  >
+
+	<category name="openjade.core.OpenAgent"  >
 		<priority value="debug"/>
 		<appender-ref ref="CONSOLE" />
 	</category>
- -->	
+	
 	<category name="openjade.core.behaviours.SendIterationBehaviour"  >
 		<priority value="debug"/>
 		<appender-ref ref="CONSOLE" />
