@@ -11,11 +11,6 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>jade</groupId>
-			<artifactId>jade</artifactId>
-			<version>4.5</version>
-		</dependency>
-		<dependency>
 			<groupId>open-jade</groupId>
 			<artifactId>open-jade</artifactId>
 			<version>1.0.0-RC-1</version>
