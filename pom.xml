@@ -52,7 +52,7 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>			
+			</plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
@@ -61,7 +61,7 @@
 					</descriptors>
 					<archive>
 						<manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
-					</archive>					
+					</archive>
 				</configuration>
 				<executions>
 					<execution>
@@ -75,14 +75,20 @@
 			</plugin>
 		</plugins>
 	</build>
+
 	<repositories>
 		<repository>
 			<id>open-jade</id>
 			<url>https://raw.github.com/botelhojp/mvn/master</url>
 		</repository>
 		<repository>
-			<id>dm</id>
+			<id>demoiselle</id>
 			<url>http://demoiselle.sourceforge.net/repository/release</url>
 		</repository>
+		<repository>
+			<id>ibiblio</id>
+			<url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
+		</repository>
 	</repositories>
+
 </project>
